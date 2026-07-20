@@ -123,16 +123,65 @@ More test cards: [Stripe testing docs](https://docs.stripe.com/testing)
 
 ---
 
+## Deploy to Vercel
+
+The project is configured for **full-stack Vercel deployment** — Vue frontend + Stripe serverless API on the same domain.
+
+### 1. Push to GitHub
+
+Commit and push your code to a GitHub repository.
+
+### 2. Import on Vercel
+
+1. Go to [vercel.com/new](https://vercel.com/new)  
+2. Import your repository  
+3. Vercel auto-detects **Vite** — no build settings changes needed  
+
+### 3. Add environment variables
+
+In **Project Settings → Environment Variables**, add:
+
+| Name | Value |
+|------|--------|
+| `VITE_STRIPE_PUBLISHABLE_KEY` | `pk_test_...` from Stripe Dashboard |
+| `STRIPE_SECRET_KEY` | `sk_test_...` from Stripe Dashboard |
+
+Apply to **Production**, **Preview**, and **Development**.
+
+> Use **test mode** keys only. Never expose `STRIPE_SECRET_KEY` as a `VITE_` variable.
+
+### 4. Deploy
+
+Click **Deploy**. Vercel will:
+
+- Build the Vue app to `dist/`  
+- Deploy `/api/health` and `/api/create-payment-intent` as serverless functions  
+- Route all other paths to `index.html` for Vue Router  
+
+### Local vs production
+
+| Environment | API |
+|-------------|-----|
+| **Local** (`npm run dev`) | Express on port 4242 (proxied via Vite) |
+| **Vercel** | Serverless functions in `/api` |
+
+Both use the same shared logic in `lib/stripe.js`.
+
+---
+
 ## Project Structure
 
 ```
-server/             # Express API — creates Stripe PaymentIntents
+api/                # Vercel serverless functions (production)
+lib/                # Shared Stripe logic
+server/             # Express API (local development)
 src/
 ├── components/     # UI, cart, and payment components
 ├── composables/    # Payment flow logic
 ├── services/       # Stripe API client + mock bKash API
 ├── stores/         # Pinia stores (cart & checkout)
 └── views/          # Route pages
+vercel.json         # Vercel build + SPA routing config
 ```
 
 ---
