@@ -17,20 +17,22 @@ function updateQuantity(productId: string, quantity: number) {
 </script>
 
 <template>
-  <section class="mx-auto max-w-4xl px-4 py-10">
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold ui-text-heading">Your cart</h1>
-      <p class="mt-2 ui-text-body">Review items before continuing to checkout.</p>
+  <section class="page-section max-w-4xl">
+    <div class="mb-6 sm:mb-8">
+      <h1 class="page-title">Your cart</h1>
+      <p class="mt-2 text-sm ui-text-body sm:text-base">Review items before continuing to checkout.</p>
     </div>
 
-    <div v-if="isEmpty" class="ui-card border-dashed p-10 text-center">
+    <div v-if="isEmpty" class="ui-card border-dashed p-6 text-center sm:p-10">
       <p class="text-lg font-medium ui-text-heading">Your cart is empty</p>
       <p class="mt-2 text-sm ui-text-muted">Browse products and add something to get started.</p>
-      <BaseButton class="mt-6" @click="router.push({ name: 'products' })">Browse products</BaseButton>
+      <BaseButton class="mt-6 w-full sm:w-auto" @click="router.push({ name: 'products' })">
+        Browse products
+      </BaseButton>
     </div>
 
     <template v-else>
-      <div class="space-y-4">
+      <div class="space-y-3 sm:space-y-4">
         <CartItem
           v-for="line in cartStore.lines"
           :key="line.productId"
@@ -42,8 +44,8 @@ function updateQuantity(productId: string, quantity: number) {
         />
       </div>
 
-      <div class="ui-card mt-8 p-6">
-        <div class="flex items-center justify-between text-lg font-semibold ui-text-heading">
+      <div class="ui-card mt-6 p-4 sm:mt-8 sm:p-6">
+        <div class="flex items-center justify-between text-base font-semibold ui-text-heading sm:text-lg">
           <span>Total</span>
           <span>{{ formatCurrency(cartStore.total) }}</span>
         </div>

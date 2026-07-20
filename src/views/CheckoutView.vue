@@ -37,14 +37,18 @@ function submitCheckout() {
 </script>
 
 <template>
-  <section class="mx-auto max-w-6xl px-4 py-10">
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold ui-text-heading">Checkout details</h1>
-      <p class="mt-2 ui-text-body">Just the essentials before entering the payment gateway.</p>
+  <section class="page-section">
+    <div class="mb-6 sm:mb-8">
+      <h1 class="page-title">Checkout details</h1>
+      <p class="mt-2 text-sm ui-text-body sm:text-base">
+        Just the essentials before entering the payment gateway.
+      </p>
     </div>
 
-    <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-      <form class="ui-card space-y-4 p-6" @submit.prevent="submitCheckout">
+    <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8">
+      <OrderSummary class="order-1 lg:order-2" />
+
+      <form class="ui-card order-2 space-y-4 p-4 sm:p-6 lg:order-1" @submit.prevent="submitCheckout">
         <BaseInput
           id="email"
           v-model="form.email"
@@ -62,7 +66,7 @@ function submitCheckout() {
           autocomplete="name"
           :error="errors.fullName"
         />
-        <div class="grid gap-4 sm:grid-cols-2">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <BaseInput
             id="country"
             v-model="form.country"
@@ -81,15 +85,13 @@ function submitCheckout() {
           />
         </div>
 
-        <div class="flex flex-wrap gap-3 pt-2">
-          <BaseButton type="submit">Continue to payment</BaseButton>
-          <BaseButton variant="secondary" type="button" @click="router.push({ name: 'cart' })">
+        <div class="flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap">
+          <BaseButton type="submit" class="w-full sm:w-auto">Continue to payment</BaseButton>
+          <BaseButton variant="secondary" type="button" class="w-full sm:w-auto" @click="router.push({ name: 'cart' })">
             Back to cart
           </BaseButton>
         </div>
       </form>
-
-      <OrderSummary />
     </div>
   </section>
 </template>

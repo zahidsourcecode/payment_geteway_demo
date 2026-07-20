@@ -23,33 +23,33 @@ function addToCart(productId: string) {
 </script>
 
 <template>
-  <section class="mx-auto max-w-6xl px-4 py-10">
-    <div class="mb-10 max-w-2xl">
+  <section class="page-section">
+    <div class="mb-8 max-w-2xl sm:mb-10">
       <p class="text-sm font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-400">Mini store</p>
-      <h1 class="mt-2 text-3xl font-bold ui-text-heading md:text-4xl">
+      <h1 class="page-title mt-2 md:text-4xl">
         Simple products, advanced checkout
       </h1>
-      <p class="mt-3 ui-text-body">
+      <p class="mt-3 text-sm ui-text-body sm:text-base">
         Add a few items to your cart, then experience a full payment gateway flow with validation,
         3D Secure, declines, and retries.
       </p>
     </div>
 
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
       <article
         v-for="product in products"
         :key="product.id"
         class="group ui-card overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md dark:hover:shadow-brand-950/20"
       >
         <ProductImage :product="product" size="lg" />
-        <div class="space-y-4 p-5">
+        <div class="space-y-4 p-4 sm:p-5">
           <div>
             <h2 class="text-lg font-semibold ui-text-heading">{{ product.name }}</h2>
             <p class="mt-2 text-sm ui-text-muted">{{ product.description }}</p>
           </div>
-          <div class="flex items-center justify-between gap-3">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p class="text-lg font-bold ui-text-heading">{{ formatCurrency(product.price) }}</p>
-            <BaseButton @click="addToCart(product.id)">
+            <BaseButton class="w-full sm:w-auto" @click="addToCart(product.id)">
               {{ addedProductId === product.id ? 'Added ✓' : 'Add to cart' }}
             </BaseButton>
           </div>

@@ -16,7 +16,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <article class="ui-card flex gap-4 p-4">
+  <article class="ui-card flex flex-col gap-3 p-3 sm:flex-row sm:gap-4 sm:p-4">
     <ProductImage :product="product" size="sm" />
 
     <div class="flex flex-1 flex-col justify-between">
@@ -38,7 +38,7 @@ const emit = defineEmits<{
         <div class="inline-flex items-center rounded-lg border border-slate-200 dark:border-slate-700">
           <button
             type="button"
-            class="px-3 py-1.5 text-sm ui-text-body hover:bg-slate-50 dark:hover:bg-slate-800 rounded-l-lg"
+            class="min-h-10 min-w-10 px-3 py-2 text-sm ui-text-body hover:bg-slate-50 dark:hover:bg-slate-800 rounded-l-lg"
             @click="emit('decrease')"
           >
             −
@@ -46,7 +46,7 @@ const emit = defineEmits<{
           <span class="min-w-8 text-center text-sm font-medium ui-text-heading">{{ quantity }}</span>
           <button
             type="button"
-            class="px-3 py-1.5 text-sm ui-text-body hover:bg-slate-50 dark:hover:bg-slate-800 rounded-r-lg"
+            class="min-h-10 min-w-10 px-3 py-2 text-sm ui-text-body hover:bg-slate-50 dark:hover:bg-slate-800 rounded-r-lg"
             @click="emit('increase')"
           >
             +

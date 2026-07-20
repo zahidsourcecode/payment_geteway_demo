@@ -11,7 +11,7 @@ const methods: Array<{ id: PaymentMethod; label: string; description: string; ic
 </script>
 
 <template>
-  <div class="grid gap-3 sm:grid-cols-3">
+  <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
     <button
       v-for="method in methods"
       :key="method.id"

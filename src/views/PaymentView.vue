@@ -65,29 +65,29 @@ async function handle3DSConfirm(otp: string) {
 </script>
 
 <template>
-  <section class="mx-auto max-w-6xl px-4 py-10">
-    <div class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+  <section class="page-section">
+    <div class="mb-6 flex flex-col gap-3 sm:mb-8 md:flex-row md:items-end md:justify-between">
       <div>
         <p class="text-sm font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-400">Payment gateway</p>
-        <h1 class="mt-2 text-3xl font-bold ui-text-heading">Secure checkout</h1>
-        <p class="mt-2 max-w-2xl ui-text-body">
+        <h1 class="page-title mt-2">Secure checkout</h1>
+        <p class="mt-2 max-w-2xl text-sm ui-text-body sm:text-base">
           This is the core demo — method selection, validation, processing states, 3D Secure, and
           failure handling.
         </p>
       </div>
-      <div class="ui-card rounded-xl px-4 py-3 text-sm ui-text-body">
+      <div class="ui-card w-full rounded-xl px-4 py-3 text-sm ui-text-body md:w-auto">
         Customer: <span class="font-medium ui-text-heading">{{ checkoutStore.checkoutDetails.fullName }}</span>
       </div>
     </div>
 
-    <div class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
-      <div class="space-y-6">
-        <div class="ui-card p-6">
+    <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-8">
+      <div class="order-2 space-y-4 sm:space-y-6 lg:order-1">
+        <div class="ui-card p-4 sm:p-6">
           <h2 class="mb-4 text-lg font-semibold ui-text-heading">Choose payment method</h2>
           <PaymentMethodTabs v-model="selectedMethod" />
         </div>
 
-        <div class="ui-card p-6">
+        <div class="ui-card p-4 sm:p-6">
           <PaymentStatusBanner :status="payment.status.value" :message="payment.errorMessage.value" />
 
           <div class="mt-4">
@@ -144,18 +144,18 @@ async function handle3DSConfirm(otp: string) {
 
           <div
             v-if="payment.status.value === 'timeout'"
-            class="mt-4 flex flex-wrap gap-3"
+            class="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
           >
-            <BaseButton @click="payment.retry()">Retry payment</BaseButton>
-            <BaseButton variant="secondary" @click="router.push({ name: 'checkout' })">
+            <BaseButton class="w-full sm:w-auto" @click="payment.retry()">Retry payment</BaseButton>
+            <BaseButton variant="secondary" class="w-full sm:w-auto" @click="router.push({ name: 'checkout' })">
               Edit checkout
             </BaseButton>
           </div>
         </div>
 
-        <div class="ui-card p-6">
+        <div class="ui-card p-4 sm:p-6">
           <h3 class="font-semibold ui-text-heading">Test card numbers</h3>
-          <div class="mt-4 overflow-x-auto">
+          <div class="mt-4 -mx-1 overflow-x-auto px-1">
             <table class="min-w-full text-left text-sm">
               <thead class="ui-text-muted">
                 <tr>
@@ -174,9 +174,9 @@ async function handle3DSConfirm(otp: string) {
         </div>
       </div>
 
-      <div class="space-y-4">
+      <div class="order-1 space-y-4 lg:order-2">
         <OrderSummary show-method :method="selectedMethod" />
-        <div class="ui-card p-5 text-sm ui-text-body">
+        <div class="ui-card p-4 text-sm ui-text-body sm:p-5">
           <p class="font-medium ui-text-heading">What this demo shows</p>
           <ul class="mt-3 list-disc space-y-2 pl-5">
             <li>Luhn validation and formatted card inputs</li>
