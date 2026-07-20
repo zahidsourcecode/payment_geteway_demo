@@ -14,9 +14,9 @@ const methods: Array<{
   useBkashLogo?: boolean
 }> = [
   {
-    id: 'card',
-    label: 'Card',
-    description: 'Visa, Mastercard, Amex',
+    id: 'stripe',
+    label: 'Stripe',
+    description: 'Visa, Mastercard, Amex — test mode',
     image: '/images/card-icon.png',
   },
   {

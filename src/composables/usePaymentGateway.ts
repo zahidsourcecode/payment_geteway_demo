@@ -1,16 +1,9 @@
 import { computed, ref } from 'vue'
-import { confirmThreeDS, processPayment } from '@/services/paymentApi'
+import { processPayment } from '@/services/paymentApi'
 import { useCartStore } from '@/stores/cartStore'
 import { useCheckoutStore } from '@/stores/checkoutStore'
-import type { CardDetails, PaymentFlowStatus, PaymentMethod } from '@/types'
-import { maskCardNumber } from '@/utils/formatters'
-import {
-  bkashSchema,
-  cardSchema,
-  formatZodErrors,
-  type BkashFormValues,
-  type CardFormValues,
-} from '@/utils/validation'
+import type { PaymentFlowStatus, PaymentMethod } from '@/types'
+import { formatZodErrors, bkashSchema, type BkashFormValues } from '@/utils/validation'
 
 function maskBkashMobile(mobile: string) {
   return `bKash · ${mobile.slice(0, 3)}***${mobile.slice(-3)}`
@@ -23,7 +16,6 @@ export function usePaymentGateway() {
   const status = ref<PaymentFlowStatus>('idle')
   const errorMessage = ref<string | null>(null)
   const fieldErrors = ref<Record<string, string>>({})
-  const pendingCard = ref<CardDetails | null>(null)
   const pendingBkashMobile = ref<string | null>(null)
 
   const isBusy = computed(() =>
@@ -35,26 +27,9 @@ export function usePaymentGateway() {
     fieldErrors.value = {}
   }
 
-  async function submitCardPayment(form: CardFormValues) {
-    resetErrors()
-    status.value = 'validating'
-
-    const parsed = cardSchema.safeParse(form)
-    if (!parsed.success) {
-      fieldErrors.value = formatZodErrors(parsed.error)
-      status.value = 'idle'
-      return
-    }
-
-    pendingCard.value = {
-      cardNumber: parsed.data.cardNumber,
-      expiry: form.expiry,
-      cvv: form.cvv,
-      cardholderName: parsed.data.cardholderName,
-    }
-    pendingBkashMobile.value = null
-
-    await executePayment('card')
+  function setProcessing() {
+    status.value = 'processing'
+    errorMessage.value = null
   }
 
   async function submitBkashPayment(form: BkashFormValues) {
@@ -68,12 +43,11 @@ export function usePaymentGateway() {
       return
     }
 
-    pendingCard.value = null
     pendingBkashMobile.value = parsed.data.bkashMobile
-    await executePayment('bkash')
+    await executeBkashPayment()
   }
 
-  async function executePayment(method: PaymentMethod) {
+  async function executeBkashPayment() {
     status.value = 'processing'
     errorMessage.value = null
 
@@ -81,16 +55,10 @@ export function usePaymentGateway() {
       const response = await processPayment({
         amount: cartStore.total,
         currency: cartStore.currency,
-        method,
+        method: 'bkash',
         orderId: checkoutStore.orderId,
-        card: pendingCard.value ?? undefined,
         bkashMobile: pendingBkashMobile.value ?? undefined,
       })
-
-      if (response.status === 'requires_action' && response.actionType === '3ds') {
-        status.value = 'requires_3ds'
-        return
-      }
 
       if (response.status === 'timeout') {
         status.value = 'timeout'
@@ -105,7 +73,7 @@ export function usePaymentGateway() {
         return
       }
 
-      completeSuccess(method, response.transactionId!)
+      completeSuccess('bkash', response.transactionId!)
     } catch {
       status.value = 'failed'
       errorMessage.value = 'Unexpected error while processing payment.'
@@ -113,37 +81,25 @@ export function usePaymentGateway() {
     }
   }
 
-  async function confirm3DS(otp: string) {
-    if (otp.length !== 6) {
-      errorMessage.value = 'Enter the 6-digit verification code.'
-      return false
-    }
-
-    status.value = 'processing'
-    errorMessage.value = null
-
-    const response = await confirmThreeDS(otp)
-
-    if (response.status === 'declined') {
-      status.value = 'failed'
-      errorMessage.value = response.declineMessage ?? 'Authentication failed.'
-      checkoutStore.setFailureMessage(errorMessage.value)
-      return false
-    }
-
-    completeSuccess('card', response.transactionId!)
-    return true
+  function completeStripeSuccess(transactionId: string, maskedPayment: string) {
+    status.value = 'success'
+    completeSuccess('stripe', transactionId, maskedPayment)
   }
 
-  function completeSuccess(method: PaymentMethod, transactionId: string) {
+  function completeStripeFailure(message: string) {
+    status.value = 'failed'
+    errorMessage.value = message
+    checkoutStore.setFailureMessage(message)
+  }
+
+  function completeSuccess(method: PaymentMethod, transactionId: string, maskedPayment?: string) {
     status.value = 'success'
 
-    const maskedPayment =
-      method === 'card' && pendingCard.value
-        ? maskCardNumber(pendingCard.value.cardNumber)
-        : method === 'bkash' && pendingBkashMobile.value
-          ? maskBkashMobile(pendingBkashMobile.value)
-          : 'Payment confirmed'
+    const paymentDetail =
+      maskedPayment ??
+      (method === 'bkash' && pendingBkashMobile.value
+        ? maskBkashMobile(pendingBkashMobile.value)
+        : 'Payment confirmed')
 
     checkoutStore.setCompletedOrder({
       orderId: checkoutStore.orderId,
@@ -151,7 +107,7 @@ export function usePaymentGateway() {
       amount: cartStore.total,
       currency: cartStore.currency,
       method,
-      maskedPayment,
+      maskedPayment: paymentDetail,
       customerEmail: checkoutStore.checkoutDetails.email,
       completedAt: new Date().toISOString(),
     })
@@ -169,9 +125,10 @@ export function usePaymentGateway() {
     errorMessage,
     fieldErrors,
     isBusy,
-    submitCardPayment,
+    setProcessing,
     submitBkashPayment,
-    confirm3DS,
+    completeStripeSuccess,
+    completeStripeFailure,
     retry,
   }
 }

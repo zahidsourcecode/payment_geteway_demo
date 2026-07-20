@@ -17,7 +17,7 @@ const lines = computed(() => cartStore.lines)
 
 const methodLabel = computed(() => {
   if (props.method === 'bkash') return 'bKash'
-  if (props.method === 'card') return 'Card'
+  if (props.method === 'stripe') return 'Stripe'
   return props.method
 })
 </script>

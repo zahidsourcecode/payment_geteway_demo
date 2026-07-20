@@ -13,7 +13,7 @@ const defaultCheckout: CheckoutDetails = {
 export const useCheckoutStore = defineStore('checkout', () => {
   const orderId = ref(generateOrderId())
   const checkoutDetails = ref<CheckoutDetails>({ ...defaultCheckout })
-  const selectedMethod = ref<PaymentMethod>('card')
+  const selectedMethod = ref<PaymentMethod>('stripe')
   const lastOrder = ref<CompletedOrder | null>(null)
   const lastFailureMessage = ref<string | null>(null)
 
@@ -38,7 +38,7 @@ export const useCheckoutStore = defineStore('checkout', () => {
 
   function clearSession() {
     checkoutDetails.value = { ...defaultCheckout }
-    selectedMethod.value = 'card'
+    selectedMethod.value = 'stripe'
     lastOrder.value = null
     lastFailureMessage.value = null
     orderId.value = generateOrderId()
