@@ -16,6 +16,7 @@ export interface Product {
   price: number
   emoji: string
   gradient: string
+  image?: string
 }
 
 export interface CartLine {

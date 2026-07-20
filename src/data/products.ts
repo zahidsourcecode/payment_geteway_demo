@@ -8,6 +8,7 @@ export const products: Product[] = [
     price: 129.99,
     emoji: '🎧',
     gradient: 'from-violet-500 to-indigo-600',
+    image: '/images/products/headphones.png',
   },
   {
     id: 'prod_keyboard',
@@ -16,6 +17,7 @@ export const products: Product[] = [
     price: 89.99,
     emoji: '⌨️',
     gradient: 'from-sky-500 to-blue-600',
+    image: '/images/products/keyboard.png',
   },
   {
     id: 'prod_webcam',
@@ -24,6 +26,7 @@ export const products: Product[] = [
     price: 79.99,
     emoji: '📷',
     gradient: 'from-emerald-500 to-teal-600',
+    image: '/images/products/webcam.png',
   },
   {
     id: 'prod_mouse',
@@ -32,6 +35,7 @@ export const products: Product[] = [
     price: 59.99,
     emoji: '🖱️',
     gradient: 'from-amber-500 to-orange-600',
+    image: '/images/products/mouse.png',
   },
 ]
 

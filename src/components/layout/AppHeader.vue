@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useCartStore } from '@/stores/cartStore'
 import ThemeToggle from '@/components/layout/ThemeToggle.vue'
+import { developer } from '@/data/developer'
 
 const cartStore = useCartStore()
 const itemCount = computed(() => cartStore.itemCount)
@@ -42,7 +43,6 @@ const navLinks = [
       </nav>
 
       <div class="flex items-center gap-2">
-        <ThemeToggle />
         <RouterLink
           to="/cart"
           class="relative inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-brand-300 hover:text-brand-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-brand-600 dark:hover:text-brand-400"
@@ -55,6 +55,26 @@ const navLinks = [
             {{ itemCount }}
           </span>
         </RouterLink>
+        <ThemeToggle />
+        <a
+          :href="developer.portfolioUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group hidden cursor-pointer items-center gap-2.5 rounded-xl border border-slate-200 bg-white py-1.5 pl-1.5 pr-3 shadow-sm transition hover:border-brand-300 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-brand-600 sm:inline-flex"
+          title="View developer portfolio"
+        >
+          <div class="h-9 w-9 shrink-0 overflow-hidden rounded-lg ring-2 ring-brand-100 dark:ring-brand-900">
+            <img
+              :src="developer.photoUrl"
+              :alt="developer.name"
+              class="h-full w-full object-cover object-top transition-transform duration-300 ease-out group-hover:scale-110"
+            />
+          </div>
+          <div class="text-left">
+            <p class="text-[10px] font-medium uppercase tracking-wide ui-text-muted">About developer</p>
+            <p class="text-sm font-semibold text-brand-600 dark:text-brand-400">{{ developer.name }}</p>
+          </div>
+        </a>
       </div>
     </div>
   </header>

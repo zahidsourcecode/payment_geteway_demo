@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import ProductImage from '@/components/cart/ProductImage.vue'
 import { products } from '@/data/products'
 import { useCartStore } from '@/stores/cartStore'
 import { formatCurrency } from '@/utils/formatters'
@@ -38,14 +39,9 @@ function addToCart(productId: string) {
       <article
         v-for="product in products"
         :key="product.id"
-        class="ui-card overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md dark:hover:shadow-brand-950/20"
+        class="group ui-card overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md dark:hover:shadow-brand-950/20"
       >
-        <div
-          class="flex h-40 items-center justify-center bg-gradient-to-br text-5xl"
-          :class="product.gradient"
-        >
-          {{ product.emoji }}
-        </div>
+        <ProductImage :product="product" size="lg" />
         <div class="space-y-4 p-5">
           <div>
             <h2 class="text-lg font-semibold ui-text-heading">{{ product.name }}</h2>

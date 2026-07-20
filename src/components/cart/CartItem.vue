@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ProductImage from '@/components/cart/ProductImage.vue'
 import { formatCurrency } from '@/utils/formatters'
 import type { Product } from '@/types'
 
@@ -16,12 +17,7 @@ const emit = defineEmits<{
 
 <template>
   <article class="ui-card flex gap-4 p-4">
-    <div
-      class="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-3xl"
-      :class="product.gradient"
-    >
-      {{ product.emoji }}
-    </div>
+    <ProductImage :product="product" size="sm" />
 
     <div class="flex flex-1 flex-col justify-between">
       <div class="flex items-start justify-between gap-3">
