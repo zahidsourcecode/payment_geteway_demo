@@ -39,15 +39,12 @@ function submitCheckout() {
 <template>
   <section class="mx-auto max-w-6xl px-4 py-10">
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-slate-900">Checkout details</h1>
-      <p class="mt-2 text-slate-600">Just the essentials before entering the payment gateway.</p>
+      <h1 class="text-3xl font-bold ui-text-heading">Checkout details</h1>
+      <p class="mt-2 ui-text-body">Just the essentials before entering the payment gateway.</p>
     </div>
 
     <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-      <form
-        class="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-        @submit.prevent="submitCheckout"
-      >
+      <form class="ui-card space-y-4 p-6" @submit.prevent="submitCheckout">
         <BaseInput
           id="email"
           v-model="form.email"

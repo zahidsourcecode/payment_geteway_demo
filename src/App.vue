@@ -6,11 +6,11 @@ import AppFooter from '@/components/layout/AppFooter.vue'
 
 <template>
   <div class="flex min-h-screen flex-col">
-    <DemoBanner />
     <AppHeader />
     <main class="flex-1">
       <RouterView />
     </main>
     <AppFooter />
+    <DemoBanner />
   </div>
 </template>

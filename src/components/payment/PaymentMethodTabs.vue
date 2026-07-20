@@ -19,14 +19,14 @@ const methods: Array<{ id: PaymentMethod; label: string; description: string; ic
       class="rounded-2xl border p-4 text-left transition"
       :class="
         model === method.id
-          ? 'border-brand-500 bg-brand-50 ring-2 ring-brand-100'
-          : 'border-slate-200 bg-white hover:border-slate-300'
+          ? 'border-brand-500 bg-brand-50 ring-2 ring-brand-100 dark:border-brand-400 dark:bg-brand-950/40 dark:ring-brand-900'
+          : 'border-slate-200 bg-white hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-slate-600'
       "
       @click="model = method.id"
     >
       <div class="mb-2 text-2xl">{{ method.icon }}</div>
-      <p class="font-semibold text-slate-900">{{ method.label }}</p>
-      <p class="mt-1 text-xs text-slate-500">{{ method.description }}</p>
+      <p class="font-semibold ui-text-heading">{{ method.label }}</p>
+      <p class="mt-1 text-xs ui-text-muted">{{ method.description }}</p>
     </button>
   </div>
 </template>

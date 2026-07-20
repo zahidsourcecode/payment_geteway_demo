@@ -68,26 +68,26 @@ async function handle3DSConfirm(otp: string) {
   <section class="mx-auto max-w-6xl px-4 py-10">
     <div class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
       <div>
-        <p class="text-sm font-semibold uppercase tracking-wide text-brand-600">Payment gateway</p>
-        <h1 class="mt-2 text-3xl font-bold text-slate-900">Secure checkout</h1>
-        <p class="mt-2 max-w-2xl text-slate-600">
+        <p class="text-sm font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-400">Payment gateway</p>
+        <h1 class="mt-2 text-3xl font-bold ui-text-heading">Secure checkout</h1>
+        <p class="mt-2 max-w-2xl ui-text-body">
           This is the core demo — method selection, validation, processing states, 3D Secure, and
           failure handling.
         </p>
       </div>
-      <div class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
-        Customer: <span class="font-medium text-slate-900">{{ checkoutStore.checkoutDetails.fullName }}</span>
+      <div class="ui-card rounded-xl px-4 py-3 text-sm ui-text-body">
+        Customer: <span class="font-medium ui-text-heading">{{ checkoutStore.checkoutDetails.fullName }}</span>
       </div>
     </div>
 
     <div class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
       <div class="space-y-6">
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 class="mb-4 text-lg font-semibold text-slate-900">Choose payment method</h2>
+        <div class="ui-card p-6">
+          <h2 class="mb-4 text-lg font-semibold ui-text-heading">Choose payment method</h2>
           <PaymentMethodTabs v-model="selectedMethod" />
         </div>
 
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div class="ui-card p-6">
           <PaymentStatusBanner :status="payment.status.value" :message="payment.errorMessage.value" />
 
           <div class="mt-4">
@@ -128,7 +128,7 @@ async function handle3DSConfirm(otp: string) {
             </WalletForm>
 
             <div v-else class="space-y-4">
-              <div class="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+              <div class="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200">
                 Demo bank transfer — instant confirmation with no extra fields.
               </div>
               <BaseButton
@@ -153,20 +153,20 @@ async function handle3DSConfirm(otp: string) {
           </div>
         </div>
 
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h3 class="font-semibold text-slate-900">Test card numbers</h3>
+        <div class="ui-card p-6">
+          <h3 class="font-semibold ui-text-heading">Test card numbers</h3>
           <div class="mt-4 overflow-x-auto">
             <table class="min-w-full text-left text-sm">
-              <thead class="text-slate-500">
+              <thead class="ui-text-muted">
                 <tr>
                   <th class="pb-2 pr-4 font-medium">Number</th>
                   <th class="pb-2 font-medium">Outcome</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="card in testCardNumbers" :key="card.number" class="border-t border-slate-100">
-                  <td class="py-2 pr-4 font-mono text-xs text-slate-700">{{ card.number }}</td>
-                  <td class="py-2 text-slate-600">{{ card.outcome }}</td>
+                <tr v-for="card in testCardNumbers" :key="card.number" class="border-t ui-border-subtle">
+                  <td class="py-2 pr-4 font-mono text-xs text-slate-700 dark:text-slate-300">{{ card.number }}</td>
+                  <td class="py-2 ui-text-body">{{ card.outcome }}</td>
                 </tr>
               </tbody>
             </table>
@@ -176,8 +176,8 @@ async function handle3DSConfirm(otp: string) {
 
       <div class="space-y-4">
         <OrderSummary show-method :method="selectedMethod" />
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-600 shadow-sm">
-          <p class="font-medium text-slate-900">What this demo shows</p>
+        <div class="ui-card p-5 text-sm ui-text-body">
+          <p class="font-medium ui-text-heading">What this demo shows</p>
           <ul class="mt-3 list-disc space-y-2 pl-5">
             <li>Luhn validation and formatted card inputs</li>
             <li>Processing, timeout, and retry flows</li>

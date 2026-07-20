@@ -34,55 +34,52 @@ function retryPayment() {
   <section class="mx-auto max-w-3xl px-4 py-16">
     <div
       v-if="isSuccess && order"
-      class="rounded-3xl border border-emerald-200 bg-white p-8 text-center shadow-sm"
+      class="ui-card rounded-3xl border-emerald-200 p-8 text-center dark:border-emerald-800"
     >
-      <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-3xl">
+      <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-3xl dark:bg-emerald-950">
         ✓
       </div>
-      <h1 class="mt-5 text-3xl font-bold text-slate-900">Payment successful</h1>
-      <p class="mt-2 text-slate-600">Your demo transaction has been completed.</p>
+      <h1 class="mt-5 text-3xl font-bold ui-text-heading">Payment successful</h1>
+      <p class="mt-2 ui-text-body">Your demo transaction has been completed.</p>
 
-      <dl class="mt-8 space-y-3 rounded-2xl bg-slate-50 p-6 text-left text-sm">
+      <dl class="mt-8 space-y-3 rounded-2xl ui-surface-muted p-6 text-left text-sm">
         <div class="flex justify-between gap-4">
-          <dt class="text-slate-500">Order ID</dt>
-          <dd class="font-medium text-slate-900">{{ order.orderId }}</dd>
+          <dt class="ui-text-muted">Order ID</dt>
+          <dd class="font-medium ui-text-heading">{{ order.orderId }}</dd>
         </div>
         <div class="flex justify-between gap-4">
-          <dt class="text-slate-500">Transaction ID</dt>
-          <dd class="font-mono text-xs font-medium text-slate-900">{{ order.transactionId }}</dd>
+          <dt class="ui-text-muted">Transaction ID</dt>
+          <dd class="font-mono text-xs font-medium ui-text-heading">{{ order.transactionId }}</dd>
         </div>
         <div class="flex justify-between gap-4">
-          <dt class="text-slate-500">Amount paid</dt>
-          <dd class="font-medium text-slate-900">
+          <dt class="ui-text-muted">Amount paid</dt>
+          <dd class="font-medium ui-text-heading">
             {{ formatCurrency(order.amount, order.currency) }}
           </dd>
         </div>
         <div class="flex justify-between gap-4">
-          <dt class="text-slate-500">Payment method</dt>
-          <dd class="font-medium capitalize text-slate-900">{{ order.method }}</dd>
+          <dt class="ui-text-muted">Payment method</dt>
+          <dd class="font-medium capitalize ui-text-heading">{{ order.method }}</dd>
         </div>
         <div class="flex justify-between gap-4">
-          <dt class="text-slate-500">Payment detail</dt>
-          <dd class="font-medium text-slate-900">{{ order.maskedPayment }}</dd>
+          <dt class="ui-text-muted">Payment detail</dt>
+          <dd class="font-medium ui-text-heading">{{ order.maskedPayment }}</dd>
         </div>
         <div class="flex justify-between gap-4">
-          <dt class="text-slate-500">Receipt sent to</dt>
-          <dd class="font-medium text-slate-900">{{ order.customerEmail }}</dd>
+          <dt class="ui-text-muted">Receipt sent to</dt>
+          <dd class="font-medium ui-text-heading">{{ order.customerEmail }}</dd>
         </div>
       </dl>
 
       <BaseButton class="mt-8" @click="startOver">Start a new demo order</BaseButton>
     </div>
 
-    <div
-      v-else
-      class="rounded-3xl border border-red-200 bg-white p-8 text-center shadow-sm"
-    >
-      <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-3xl">
+    <div v-else class="ui-card rounded-3xl border-red-200 p-8 text-center dark:border-red-800">
+      <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-3xl dark:bg-red-950">
         !
       </div>
-      <h1 class="mt-5 text-3xl font-bold text-slate-900">Payment failed</h1>
-      <p class="mt-2 text-slate-600">
+      <h1 class="mt-5 text-3xl font-bold ui-text-heading">Payment failed</h1>
+      <p class="mt-2 ui-text-body">
         {{ failureMessage ?? 'The gateway could not complete this payment.' }}
       </p>
 

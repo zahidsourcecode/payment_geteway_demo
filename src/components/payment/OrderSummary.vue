@@ -17,40 +17,40 @@ const lines = computed(() => cartStore.lines)
 </script>
 
 <template>
-  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+  <div class="ui-card p-6">
     <div class="mb-4 flex items-center justify-between">
-      <h2 class="text-lg font-semibold text-slate-900">Order summary</h2>
-      <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+      <h2 class="text-lg font-semibold ui-text-heading">Order summary</h2>
+      <span class="rounded-full ui-surface-muted px-3 py-1 text-xs font-medium ui-text-muted">
         {{ checkoutStore.orderId }}
       </span>
     </div>
 
-    <div v-if="lines.length" class="space-y-3 border-b border-slate-100 pb-4">
+    <div v-if="lines.length" class="space-y-3 border-b ui-border-subtle pb-4">
       <div v-for="line in lines" :key="line.productId" class="flex items-start justify-between gap-3">
         <div>
-          <p class="text-sm font-medium text-slate-800">{{ line.product.name }}</p>
-          <p class="text-xs text-slate-500">Qty {{ line.quantity }}</p>
+          <p class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ line.product.name }}</p>
+          <p class="text-xs ui-text-muted">Qty {{ line.quantity }}</p>
         </div>
-        <p class="text-sm font-medium text-slate-800">
+        <p class="text-sm font-medium text-slate-800 dark:text-slate-200">
           {{ formatCurrency(line.product.price * line.quantity) }}
         </p>
       </div>
     </div>
 
-    <div v-else class="border-b border-slate-100 pb-4 text-sm text-slate-500">
+    <div v-else class="border-b ui-border-subtle pb-4 text-sm ui-text-muted">
       No items in cart.
     </div>
 
     <dl class="mt-4 space-y-2 text-sm">
-      <div class="flex justify-between text-slate-600">
+      <div class="flex justify-between ui-text-body">
         <dt>Subtotal</dt>
         <dd>{{ formatCurrency(cartStore.subtotal) }}</dd>
       </div>
-      <div class="flex justify-between text-slate-600">
+      <div class="flex justify-between ui-text-body">
         <dt>Tax (8%)</dt>
         <dd>{{ formatCurrency(cartStore.tax) }}</dd>
       </div>
-      <div class="flex justify-between border-t border-slate-100 pt-3 text-base font-semibold text-slate-900">
+      <div class="flex justify-between border-t ui-border-subtle pt-3 text-base font-semibold ui-text-heading">
         <dt>Total</dt>
         <dd>{{ formatCurrency(cartStore.total) }}</dd>
       </div>
@@ -58,14 +58,14 @@ const lines = computed(() => cartStore.lines)
 
     <div
       v-if="showMethod && method"
-      class="mt-4 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600"
+      class="mt-4 rounded-xl ui-surface-muted px-4 py-3 text-sm ui-text-body"
     >
       Payment method:
-      <span class="font-medium capitalize text-slate-800">{{ method }}</span>
+      <span class="font-medium capitalize text-slate-800 dark:text-slate-200">{{ method }}</span>
     </div>
 
-    <div class="mt-4 flex items-center gap-2 text-xs text-slate-500">
-      <svg class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div class="mt-4 flex items-center gap-2 text-xs ui-text-muted">
+      <svg class="h-4 w-4 text-brand-600 dark:text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"

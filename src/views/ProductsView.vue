@@ -24,11 +24,11 @@ function addToCart(productId: string) {
 <template>
   <section class="mx-auto max-w-6xl px-4 py-10">
     <div class="mb-10 max-w-2xl">
-      <p class="text-sm font-semibold uppercase tracking-wide text-brand-600">Mini store</p>
-      <h1 class="mt-2 text-3xl font-bold text-slate-900 md:text-4xl">
+      <p class="text-sm font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-400">Mini store</p>
+      <h1 class="mt-2 text-3xl font-bold ui-text-heading md:text-4xl">
         Simple products, advanced checkout
       </h1>
-      <p class="mt-3 text-slate-600">
+      <p class="mt-3 ui-text-body">
         Add a few items to your cart, then experience a full payment gateway flow with validation,
         3D Secure, declines, and retries.
       </p>
@@ -38,7 +38,7 @@ function addToCart(productId: string) {
       <article
         v-for="product in products"
         :key="product.id"
-        class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+        class="ui-card overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md dark:hover:shadow-brand-950/20"
       >
         <div
           class="flex h-40 items-center justify-center bg-gradient-to-br text-5xl"
@@ -48,11 +48,11 @@ function addToCart(productId: string) {
         </div>
         <div class="space-y-4 p-5">
           <div>
-            <h2 class="text-lg font-semibold text-slate-900">{{ product.name }}</h2>
-            <p class="mt-2 text-sm text-slate-500">{{ product.description }}</p>
+            <h2 class="text-lg font-semibold ui-text-heading">{{ product.name }}</h2>
+            <p class="mt-2 text-sm ui-text-muted">{{ product.description }}</p>
           </div>
           <div class="flex items-center justify-between gap-3">
-            <p class="text-lg font-bold text-slate-900">{{ formatCurrency(product.price) }}</p>
+            <p class="text-lg font-bold ui-text-heading">{{ formatCurrency(product.price) }}</p>
             <BaseButton @click="addToCart(product.id)">
               {{ addedProductId === product.id ? 'Added ✓' : 'Add to cart' }}
             </BaseButton>

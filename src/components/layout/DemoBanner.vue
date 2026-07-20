@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-amber-50 px-4 py-2 text-center text-sm text-amber-900">
+  <div class="bg-amber-50 px-4 py-2 text-center text-sm text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
     <span class="font-medium">Demo project</span>
     — Simulated payment gateway only. No real charges are made.
   </div>

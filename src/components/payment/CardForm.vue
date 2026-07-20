@@ -57,9 +57,9 @@ function handleSubmit() {
 
 <template>
   <form class="space-y-4" @submit.prevent="handleSubmit">
-    <div class="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3">
-      <p class="text-sm text-slate-600">Card network</p>
-      <p class="text-sm font-semibold text-slate-900">{{ cardBrand }}</p>
+    <div class="flex items-center justify-between rounded-xl ui-surface-muted px-4 py-3">
+      <p class="text-sm ui-text-body">Card network</p>
+      <p class="text-sm font-semibold ui-text-heading">{{ cardBrand }}</p>
     </div>
 
     <BaseInput

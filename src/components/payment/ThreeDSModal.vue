@@ -45,20 +45,20 @@ watch(
   <Teleport to="body">
     <div
       v-if="open"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm dark:bg-black/70"
     >
-      <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+      <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-slate-900 dark:ring-1 dark:ring-slate-700">
         <div class="mb-4 flex items-center gap-3">
-          <div class="flex h-11 w-11 items-center justify-center rounded-full bg-brand-100 text-xl">
+          <div class="flex h-11 w-11 items-center justify-center rounded-full bg-brand-100 text-xl dark:bg-brand-950">
             🛡️
           </div>
           <div>
-            <h3 class="text-lg font-semibold text-slate-900">3D Secure verification</h3>
-            <p class="text-sm text-slate-500">Confirm this payment with your bank</p>
+            <h3 class="text-lg font-semibold ui-text-heading">3D Secure verification</h3>
+            <p class="text-sm ui-text-muted">Confirm this payment with your bank</p>
           </div>
         </div>
 
-        <p class="mb-4 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+        <p class="mb-4 rounded-xl ui-surface-muted px-4 py-3 text-sm ui-text-body">
           {{ threeDSHint }}
         </p>
 

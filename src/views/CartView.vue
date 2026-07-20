@@ -19,13 +19,13 @@ function updateQuantity(productId: string, quantity: number) {
 <template>
   <section class="mx-auto max-w-4xl px-4 py-10">
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-slate-900">Your cart</h1>
-      <p class="mt-2 text-slate-600">Review items before continuing to checkout.</p>
+      <h1 class="text-3xl font-bold ui-text-heading">Your cart</h1>
+      <p class="mt-2 ui-text-body">Review items before continuing to checkout.</p>
     </div>
 
-    <div v-if="isEmpty" class="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
-      <p class="text-lg font-medium text-slate-800">Your cart is empty</p>
-      <p class="mt-2 text-sm text-slate-500">Browse products and add something to get started.</p>
+    <div v-if="isEmpty" class="ui-card border-dashed p-10 text-center">
+      <p class="text-lg font-medium ui-text-heading">Your cart is empty</p>
+      <p class="mt-2 text-sm ui-text-muted">Browse products and add something to get started.</p>
       <BaseButton class="mt-6" @click="router.push({ name: 'products' })">Browse products</BaseButton>
     </div>
 
@@ -42,8 +42,8 @@ function updateQuantity(productId: string, quantity: number) {
         />
       </div>
 
-      <div class="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div class="flex items-center justify-between text-lg font-semibold text-slate-900">
+      <div class="ui-card mt-8 p-6">
+        <div class="flex items-center justify-between text-lg font-semibold ui-text-heading">
           <span>Total</span>
           <span>{{ formatCurrency(cartStore.total) }}</span>
         </div>

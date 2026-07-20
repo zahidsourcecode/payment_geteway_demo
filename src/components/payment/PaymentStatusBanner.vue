@@ -23,9 +23,12 @@ const statusCopy: Record<
     v-if="status !== 'idle' && status !== 'success'"
     class="rounded-xl border px-4 py-3 text-sm"
     :class="{
-      'border-sky-200 bg-sky-50 text-sky-900': statusCopy[status]?.tone === 'info',
-      'border-red-200 bg-red-50 text-red-900': statusCopy[status]?.tone === 'error',
-      'border-amber-200 bg-amber-50 text-amber-900': statusCopy[status]?.tone === 'warning',
+      'border-brand-200 bg-brand-50 text-brand-900 dark:border-brand-800 dark:bg-brand-950/50 dark:text-brand-100':
+        statusCopy[status]?.tone === 'info',
+      'border-red-200 bg-red-50 text-red-900 dark:border-red-800 dark:bg-red-950/50 dark:text-red-200':
+        statusCopy[status]?.tone === 'error',
+      'border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-200':
+        statusCopy[status]?.tone === 'warning',
     }"
   >
     <p class="font-medium">{{ statusCopy[status]?.title }}</p>
