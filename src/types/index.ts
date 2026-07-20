@@ -1,4 +1,4 @@
-export type PaymentMethod = 'card' | 'wallet' | 'bank'
+export type PaymentMethod = 'card' | 'bkash'
 
 export type PaymentFlowStatus =
   | 'idle'
@@ -44,7 +44,7 @@ export interface PaymentPayload {
   method: PaymentMethod
   orderId: string
   card?: CardDetails
-  walletEmail?: string
+  bkashMobile?: string
 }
 
 export interface PaymentApiResponse {

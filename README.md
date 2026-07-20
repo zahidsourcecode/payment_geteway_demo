@@ -100,7 +100,7 @@ Use these in the payment form to simulate different gateway outcomes:
 
 **3D Secure:** enter any 6-digit code except `000000` to approve.
 
-**Wallet demo:** use any valid email; include `decline` in the address to simulate a failure.
+**bKash demo:** use any valid `01XXXXXXXXX` number; include `0000` in the number to simulate a decline.
 
 ---
 

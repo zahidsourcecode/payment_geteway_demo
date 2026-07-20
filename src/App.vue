@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import DemoBanner from '@/components/layout/DemoBanner.vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 </script>
@@ -11,6 +10,5 @@ import AppFooter from '@/components/layout/AppFooter.vue'
       <RouterView />
     </main>
     <AppFooter />
-    <DemoBanner />
   </div>
 </template>

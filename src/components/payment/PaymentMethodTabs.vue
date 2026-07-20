@@ -1,17 +1,35 @@
 <script setup lang="ts">
+import BkashLogo from '@/components/payment/BkashLogo.vue'
 import type { PaymentMethod } from '@/types'
 
 const model = defineModel<PaymentMethod>({ required: true })
 
-const methods: Array<{ id: PaymentMethod; label: string; description: string; icon: string }> = [
-  { id: 'card', label: 'Card', description: 'Visa, Mastercard, Amex', icon: '💳' },
-  { id: 'wallet', label: 'Wallet', description: 'PayPal-style demo wallet', icon: '👛' },
-  { id: 'bank', label: 'Bank', description: 'Instant bank transfer demo', icon: '🏦' },
+const cardIconClass = 'h-14 w-[11rem] object-contain object-left'
+
+const methods: Array<{
+  id: PaymentMethod
+  label: string
+  description: string
+  image?: string
+  useBkashLogo?: boolean
+}> = [
+  {
+    id: 'card',
+    label: 'Card',
+    description: 'Visa, Mastercard, Amex',
+    image: '/images/card-icon.png',
+  },
+  {
+    id: 'bkash',
+    label: 'bKash',
+    description: 'Mobile financial service',
+    useBkashLogo: true,
+  },
 ]
 </script>
 
 <template>
-  <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
     <button
       v-for="method in methods"
       :key="method.id"
@@ -24,8 +42,19 @@ const methods: Array<{ id: PaymentMethod; label: string; description: string; ic
       "
       @click="model = method.id"
     >
-      <div class="mb-2 text-2xl">{{ method.icon }}</div>
-      <p class="font-semibold ui-text-heading">{{ method.label }}</p>
+      <div
+        class="mb-3 flex items-center"
+        :class="method.useBkashLogo ? 'h-11 w-[9rem]' : 'h-14 w-[11rem]'"
+      >
+        <BkashLogo v-if="method.useBkashLogo" height-class="h-11 w-[9rem]" />
+        <img
+          v-else-if="method.image"
+          :src="method.image"
+          :alt="method.label"
+          :class="cardIconClass"
+        />
+      </div>
+      <p v-if="!method.useBkashLogo" class="font-semibold ui-text-heading">{{ method.label }}</p>
       <p class="mt-1 text-xs ui-text-muted">{{ method.description }}</p>
     </button>
   </div>

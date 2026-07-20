@@ -66,8 +66,11 @@ function handleSubmit() {
       id="cardNumber"
       v-model="form.cardNumber"
       label="Card number"
-      placeholder="4242 4242 4242 4242"
+      placeholder="XXXX XXXX XXXX XXXX"
       autocomplete="cc-number"
+      type="tel"
+      inputmode="numeric"
+      maxlength="19"
       :error="props.errors.cardNumber"
       :disabled="disabled"
     />

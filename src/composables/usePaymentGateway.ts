@@ -5,12 +5,16 @@ import { useCheckoutStore } from '@/stores/checkoutStore'
 import type { CardDetails, PaymentFlowStatus, PaymentMethod } from '@/types'
 import { maskCardNumber } from '@/utils/formatters'
 import {
+  bkashSchema,
   cardSchema,
   formatZodErrors,
-  walletSchema,
+  type BkashFormValues,
   type CardFormValues,
-  type WalletFormValues,
 } from '@/utils/validation'
+
+function maskBkashMobile(mobile: string) {
+  return `bKash · ${mobile.slice(0, 3)}***${mobile.slice(-3)}`
+}
 
 export function usePaymentGateway() {
   const cartStore = useCartStore()
@@ -20,7 +24,7 @@ export function usePaymentGateway() {
   const errorMessage = ref<string | null>(null)
   const fieldErrors = ref<Record<string, string>>({})
   const pendingCard = ref<CardDetails | null>(null)
-  const pendingWalletEmail = ref<string | null>(null)
+  const pendingBkashMobile = ref<string | null>(null)
 
   const isBusy = computed(() =>
     ['validating', 'processing', 'requires_3ds'].includes(status.value),
@@ -48,30 +52,25 @@ export function usePaymentGateway() {
       cvv: form.cvv,
       cardholderName: parsed.data.cardholderName,
     }
+    pendingBkashMobile.value = null
 
     await executePayment('card')
   }
 
-  async function submitWalletPayment(form: WalletFormValues) {
+  async function submitBkashPayment(form: BkashFormValues) {
     resetErrors()
     status.value = 'validating'
 
-    const parsed = walletSchema.safeParse(form)
+    const parsed = bkashSchema.safeParse(form)
     if (!parsed.success) {
       fieldErrors.value = formatZodErrors(parsed.error)
       status.value = 'idle'
       return
     }
 
-    pendingWalletEmail.value = parsed.data.walletEmail
-    await executePayment('wallet')
-  }
-
-  async function submitBankPayment() {
-    resetErrors()
     pendingCard.value = null
-    pendingWalletEmail.value = null
-    await executePayment('bank')
+    pendingBkashMobile.value = parsed.data.bkashMobile
+    await executePayment('bkash')
   }
 
   async function executePayment(method: PaymentMethod) {
@@ -85,7 +84,7 @@ export function usePaymentGateway() {
         method,
         orderId: checkoutStore.orderId,
         card: pendingCard.value ?? undefined,
-        walletEmail: pendingWalletEmail.value ?? undefined,
+        bkashMobile: pendingBkashMobile.value ?? undefined,
       })
 
       if (response.status === 'requires_action' && response.actionType === '3ds') {
@@ -142,9 +141,9 @@ export function usePaymentGateway() {
     const maskedPayment =
       method === 'card' && pendingCard.value
         ? maskCardNumber(pendingCard.value.cardNumber)
-        : method === 'wallet'
-          ? `Wallet · ${pendingWalletEmail.value}`
-          : 'Bank transfer · Demo account'
+        : method === 'bkash' && pendingBkashMobile.value
+          ? maskBkashMobile(pendingBkashMobile.value)
+          : 'Payment confirmed'
 
     checkoutStore.setCompletedOrder({
       orderId: checkoutStore.orderId,
@@ -171,8 +170,7 @@ export function usePaymentGateway() {
     fieldErrors,
     isBusy,
     submitCardPayment,
-    submitWalletPayment,
-    submitBankPayment,
+    submitBkashPayment,
     confirm3DS,
     retry,
   }

@@ -5,7 +5,7 @@ import { useCheckoutStore } from '@/stores/checkoutStore'
 import { formatCurrency } from '@/utils/formatters'
 import type { PaymentMethod } from '@/types'
 
-defineProps<{
+const props = defineProps<{
   showMethod?: boolean
   method?: PaymentMethod
 }>()
@@ -14,6 +14,12 @@ const cartStore = useCartStore()
 const checkoutStore = useCheckoutStore()
 
 const lines = computed(() => cartStore.lines)
+
+const methodLabel = computed(() => {
+  if (props.method === 'bkash') return 'bKash'
+  if (props.method === 'card') return 'Card'
+  return props.method
+})
 </script>
 
 <template>
@@ -61,7 +67,7 @@ const lines = computed(() => cartStore.lines)
       class="mt-4 rounded-xl ui-surface-muted px-4 py-3 text-sm ui-text-body"
     >
       Payment method:
-      <span class="font-medium capitalize text-slate-800 dark:text-slate-200">{{ method }}</span>
+      <span class="font-medium text-slate-800 dark:text-slate-200">{{ methodLabel }}</span>
     </div>
 
     <div class="mt-4 flex items-center gap-2 text-xs ui-text-muted">

@@ -4,6 +4,8 @@ import { useRouter } from 'vue-router'
 import OrderSummary from '@/components/payment/OrderSummary.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
+import BaseSelect from '@/components/ui/BaseSelect.vue'
+import countries from '@/data/countries.json'
 import { useCartStore } from '@/stores/cartStore'
 import { useCheckoutStore } from '@/stores/checkoutStore'
 import { checkoutSchema, formatZodErrors } from '@/utils/validation'
@@ -14,6 +16,11 @@ const router = useRouter()
 
 const errors = ref<Record<string, string>>({})
 const form = reactive({ ...checkoutStore.checkoutDetails })
+
+const countryOptions = countries.map((country) => ({
+  value: country.name,
+  label: country.name,
+}))
 
 function submitCheckout() {
   errors.value = {}
@@ -67,12 +74,12 @@ function submitCheckout() {
           :error="errors.fullName"
         />
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <BaseInput
+          <BaseSelect
             id="country"
             v-model="form.country"
             label="Country"
-            placeholder="United States"
             autocomplete="country-name"
+            :options="countryOptions"
             :error="errors.country"
           />
           <BaseInput

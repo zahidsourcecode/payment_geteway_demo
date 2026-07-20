@@ -19,10 +19,10 @@ const navLinks = [
 ]
 
 const navLinkClass =
-  'inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-400'
+  'inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-400'
 
 const navActiveClass =
-  'router-link-active !bg-white !text-brand-600 shadow-sm dark:!bg-slate-900 dark:!text-brand-400'
+  'router-link-active !bg-brand-500 !text-white shadow-sm dark:!bg-brand-500 dark:!text-white'
 
 watch(
   () => route.path,
@@ -38,15 +38,15 @@ function toggleMobileMenu() {
 
 <template>
   <header class="sticky top-0 z-40 border-b ui-chrome">
-    <div class="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:gap-4 sm:py-4">
-      <RouterLink to="/" class="flex min-w-0 items-center gap-2 sm:gap-3">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-2.5 sm:gap-3 sm:py-3">
+      <RouterLink to="/" class="flex min-w-0 items-center gap-2 sm:gap-2.5">
         <div
           class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-sm font-bold text-white shadow-sm sm:h-10 sm:w-10"
         >
           PF
         </div>
         <div class="min-w-0">
-          <p class="truncate text-base font-semibold ui-text-heading sm:text-lg">PayFlow</p>
+          <p class="truncate text-sm font-semibold ui-text-heading sm:text-base">PayFlow</p>
           <p class="hidden text-xs ui-text-muted sm:block">Payment Gateway Demo</p>
         </div>
       </RouterLink>
@@ -76,7 +76,8 @@ function toggleMobileMenu() {
       <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
         <RouterLink
           to="/cart"
-          class="relative inline-flex min-h-10 min-w-10 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-brand-300 hover:text-brand-600 sm:min-w-0 sm:px-4 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-brand-600 dark:hover:text-brand-400"
+          class="relative inline-flex min-h-10 min-w-10 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-brand-300 hover:text-brand-600 sm:min-w-0 sm:px-3.5 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-brand-600 dark:hover:text-brand-400"
+          :class="{ 'cart-pulse': itemCount > 0 }"
           aria-label="Cart"
         >
           <span class="hidden sm:inline">Cart</span>
@@ -120,10 +121,10 @@ function toggleMobileMenu() {
           :href="developer.portfolioUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="group hidden cursor-pointer items-center gap-2.5 rounded-xl border border-slate-200 bg-white py-1.5 pl-1.5 pr-3 shadow-sm transition hover:border-brand-300 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-brand-600 sm:inline-flex"
+          class="group hidden cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white py-1 pl-1 pr-2.5 shadow-sm transition hover:border-brand-300 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-brand-600 sm:inline-flex"
           title="View developer portfolio"
         >
-          <div class="h-9 w-9 shrink-0 overflow-hidden rounded-lg ring-2 ring-brand-100 dark:ring-brand-900">
+          <div class="h-8 w-8 shrink-0 overflow-hidden rounded-lg ring-2 ring-brand-100 dark:ring-brand-900">
             <img
               :src="developer.photoUrl"
               :alt="developer.name"
@@ -158,7 +159,7 @@ function toggleMobileMenu() {
     <div
       v-show="mobileMenuOpen"
       id="mobile-menu"
-      class="border-t border-slate-200 px-4 py-3 md:hidden dark:border-slate-800"
+      class="border-t ui-border-subtle px-4 py-2 md:hidden"
     >
       <nav
         class="flex flex-col gap-1 rounded-xl border border-slate-200 bg-slate-100/80 p-1 dark:border-slate-700 dark:bg-slate-800/80"

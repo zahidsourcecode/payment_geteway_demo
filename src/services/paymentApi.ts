@@ -63,31 +63,25 @@ function luhnPasses(cardNumber: string): boolean {
 export async function processPayment(payload: PaymentPayload): Promise<PaymentApiResponse> {
   await delay(1600 + Math.random() * 900)
 
-  if (payload.method === 'wallet') {
-    if (!payload.walletEmail?.includes('@')) {
+  if (payload.method === 'bkash') {
+    const mobile = payload.bkashMobile?.replace(/\D/g, '') ?? ''
+
+    if (!/^01\d{9}$/.test(mobile)) {
       return {
         status: 'declined',
-        declineCode: 'invalid_wallet',
-        declineMessage: 'Wallet account could not be verified.',
+        declineCode: 'invalid_bkash',
+        declineMessage: 'bKash account could not be verified.',
       }
     }
 
-    if (payload.walletEmail.toLowerCase().includes('decline')) {
+    if (mobile.includes('0000')) {
       return {
         status: 'declined',
-        declineCode: 'wallet_declined',
-        declineMessage: 'Wallet authorization was declined by the provider.',
+        declineCode: 'bkash_declined',
+        declineMessage: 'bKash payment was declined. Please check your balance and try again.',
       }
     }
 
-    return {
-      status: 'succeeded',
-      transactionId: generateTransactionId(),
-    }
-  }
-
-  if (payload.method === 'bank') {
-    await delay(800)
     return {
       status: 'succeeded',
       transactionId: generateTransactionId(),

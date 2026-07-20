@@ -23,15 +23,14 @@ function addToCart(productId: string) {
 </script>
 
 <template>
-  <section class="page-section">
-    <div class="mb-8 max-w-2xl sm:mb-10">
+  <section class="page-section !py-4 sm:!py-6">
+    <div class="mb-4 sm:mb-5">
       <p class="text-sm font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-400">Mini store</p>
-      <h1 class="page-title mt-2 md:text-4xl">
-        Simple products, advanced checkout
+      <h1 class="page-title mt-1 md:text-4xl">
+        Shop Smarter, Live Better
       </h1>
-      <p class="mt-3 text-sm ui-text-body sm:text-base">
-        Add a few items to your cart, then experience a full payment gateway flow with validation,
-        3D Secure, declines, and retries.
+      <p class="mt-2 text-sm ui-text-body sm:text-base sm:whitespace-nowrap">
+        Find what you love, add it to your cart, and check out with confidence using our fast and secure shopping experience.
       </p>
     </div>
 

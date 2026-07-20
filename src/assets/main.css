@@ -30,6 +30,14 @@
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
   }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
 }
 
 @layer utilities {
@@ -69,5 +77,26 @@
 
   .ui-text-muted {
     @apply text-slate-500 dark:text-slate-400;
+  }
+
+  .cart-pulse {
+    animation: cart-pulse 1.4s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cart-pulse {
+      animation: none;
+    }
+  }
+}
+
+@keyframes cart-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
   }
 }
