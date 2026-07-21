@@ -16,6 +16,7 @@ export const useCheckoutStore = defineStore('checkout', () => {
   const selectedMethod = ref<PaymentMethod>('stripe')
   const lastOrder = ref<CompletedOrder | null>(null)
   const lastFailureMessage = ref<string | null>(null)
+  const paymentHistory = ref<CompletedOrder[]>([])
 
   function updateCheckoutDetails(details: Partial<CheckoutDetails>) {
     checkoutDetails.value = { ...checkoutDetails.value, ...details }
@@ -29,6 +30,7 @@ export const useCheckoutStore = defineStore('checkout', () => {
   function setCompletedOrder(order: CompletedOrder) {
     lastOrder.value = order
     lastFailureMessage.value = null
+    paymentHistory.value.push(order)
   }
 
   function setFailureMessage(message: string) {
@@ -50,6 +52,7 @@ export const useCheckoutStore = defineStore('checkout', () => {
     selectedMethod,
     lastOrder,
     lastFailureMessage,
+    paymentHistory,
     updateCheckoutDetails,
     resetOrder,
     setCompletedOrder,

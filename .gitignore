@@ -13,7 +13,11 @@ dist
 dist-ssr
 coverage
 *.local
+
+# Environment (secrets — never commit)
 .env
+.env.*
+!.env.example
 
 # Editor directories and files
 .vscode/*

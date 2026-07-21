@@ -83,8 +83,13 @@
     animation: cart-pulse 1.4s ease-in-out infinite;
   }
 
+  .hint-bulb-glow {
+    animation: hint-bulb-glow 2s ease-in-out infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .cart-pulse {
+    .cart-pulse,
+    .hint-bulb-glow {
       animation: none;
     }
   }
@@ -98,5 +103,22 @@
 
   50% {
     transform: scale(1.08);
+  }
+}
+
+@keyframes hint-bulb-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgb(78 189 211 / 35%),
+      0 0 10px rgb(78 189 211 / 25%);
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 5px rgb(78 189 211 / 18%),
+      0 0 18px rgb(78 189 211 / 55%);
+    transform: scale(1.06);
   }
 }

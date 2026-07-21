@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import BkashForm from '@/components/payment/BkashForm.vue'
 import OrderSummary from '@/components/payment/OrderSummary.vue'
+import PaymentHistory from '@/components/payment/PaymentHistory.vue'
 import PaymentMethodTabs from '@/components/payment/PaymentMethodTabs.vue'
 import PaymentStatusBanner from '@/components/payment/PaymentStatusBanner.vue'
 import StripePaymentForm from '@/components/payment/StripePaymentForm.vue'
+import StripeTestCardsModal from '@/components/payment/StripeTestCardsModal.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { usePaymentGateway } from '@/composables/usePaymentGateway'
-import { stripeTestCards } from '@/services/stripeApi'
 import { useCartStore } from '@/stores/cartStore'
 import { useCheckoutStore } from '@/stores/checkoutStore'
 import type { BkashFormValues } from '@/utils/validation'
+
+const showTestCardsModal = ref(false)
 
 const checkoutStore = useCheckoutStore()
 const cartStore = useCartStore()
@@ -80,9 +83,22 @@ function handleStripeFailed(message: string) {
     <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-8">
       <div class="order-2 space-y-4 sm:space-y-6 lg:order-1">
         <div class="ui-card p-4 sm:p-6">
-          <h2 class="mb-4 text-lg font-semibold ui-text-heading">Choose payment method</h2>
+          <div class="mb-4 flex items-center gap-2">
+            <h2 class="text-lg font-semibold ui-text-heading">Choose payment method</h2>
+            <button
+              type="button"
+              class="hint-bulb-glow inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-brand-100 text-base transition hover:bg-brand-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 dark:bg-brand-950 dark:hover:bg-brand-900"
+              aria-label="Show Stripe test cards"
+              title="Stripe test cards"
+              @click="showTestCardsModal = true"
+            >
+              💡
+            </button>
+          </div>
           <PaymentMethodTabs v-model="selectedMethod" />
         </div>
+
+        <StripeTestCardsModal v-model:open="showTestCardsModal" />
 
         <div class="ui-card p-4 sm:p-6">
           <PaymentStatusBanner :status="payment.status.value" :message="payment.errorMessage.value" />
@@ -130,30 +146,11 @@ function handleStripeFailed(message: string) {
           </div>
         </div>
 
-        <div v-if="selectedMethod === 'stripe'" class="ui-card p-4 sm:p-6">
-          <h3 class="font-semibold ui-text-heading">Stripe test cards</h3>
-          <p class="mt-1 text-sm ui-text-muted">Use any future expiry and any 3-digit CVC.</p>
-          <div class="mt-4 -mx-1 overflow-x-auto px-1">
-            <table class="min-w-full text-left text-sm">
-              <thead class="ui-text-muted">
-                <tr>
-                  <th class="pb-2 pr-4 font-medium">Number</th>
-                  <th class="pb-2 font-medium">Outcome</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="card in stripeTestCards" :key="card.number" class="border-t ui-border-subtle">
-                  <td class="py-2 pr-4 font-mono text-xs text-slate-700 dark:text-slate-300">{{ card.number }}</td>
-                  <td class="py-2 ui-text-body">{{ card.outcome }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
 
       <div class="order-1 space-y-4 lg:order-2">
         <OrderSummary show-method :method="selectedMethod" />
+        <PaymentHistory />
         <div class="ui-card p-4 text-sm ui-text-body sm:p-5">
           <p class="font-medium ui-text-heading">What this demo shows</p>
           <ul class="mt-3 list-disc space-y-2 pl-5">
