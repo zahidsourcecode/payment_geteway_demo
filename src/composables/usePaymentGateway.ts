@@ -5,7 +5,9 @@ import {
 } from '@/services/bkashApi'
 import { useCartStore } from '@/stores/cartStore'
 import { useCheckoutStore } from '@/stores/checkoutStore'
+import { useErrorLogStore } from '@/stores/errorLogStore'
 import type { PaymentFlowStatus, PaymentMethod } from '@/types'
+import { getErrorDetails } from '@/utils/errors'
 import { formatZodErrors, bkashSchema, type BkashFormValues } from '@/utils/validation'
 
 function maskBkashMobile(mobile: string) {
@@ -15,6 +17,7 @@ function maskBkashMobile(mobile: string) {
 export function usePaymentGateway() {
   const cartStore = useCartStore()
   const checkoutStore = useCheckoutStore()
+  const errorLogStore = useErrorLogStore()
 
   const status = ref<PaymentFlowStatus>('idle')
   const errorMessage = ref<string | null>(null)
@@ -22,6 +25,10 @@ export function usePaymentGateway() {
   const pendingBkashMobile = ref<string | null>(null)
 
   const isBusy = computed(() => ['validating', 'processing'].includes(status.value))
+
+  function logPaymentError(source: 'stripe' | 'bkash', message: string, details?: unknown) {
+    errorLogStore.addError({ source, message, details })
+  }
 
   function resetErrors() {
     errorMessage.value = null
@@ -48,6 +55,7 @@ export function usePaymentGateway() {
       status.value = 'failed'
       errorMessage.value = 'Your cart is empty. Add products before paying with bKash.'
       checkoutStore.setFailureMessage(errorMessage.value)
+      logPaymentError('bkash', errorMessage.value)
       return
     }
 
@@ -80,6 +88,7 @@ export function usePaymentGateway() {
       errorMessage.value =
         error instanceof Error ? error.message : 'Unexpected error while starting bKash payment.'
       checkoutStore.setFailureMessage(errorMessage.value)
+      logPaymentError('bkash', errorMessage.value, getErrorDetails(error))
     }
   }
 
@@ -88,10 +97,11 @@ export function usePaymentGateway() {
     completeSuccess('stripe', transactionId, maskedPayment)
   }
 
-  function completeStripeFailure(message: string) {
+  function completeStripeFailure(message: string, details?: unknown) {
     status.value = 'failed'
     errorMessage.value = message
     checkoutStore.setFailureMessage(message)
+    logPaymentError('stripe', message, details)
   }
 
   function completeSuccess(method: PaymentMethod, transactionId: string, maskedPayment?: string) {

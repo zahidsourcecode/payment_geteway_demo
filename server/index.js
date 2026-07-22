@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import cors from 'cors'
 import express from 'express'
-import { createBkashPayment, executeBkashPayment } from '../lib/bkash.js'
+import { createBkashPayment, executeBkashPayment, formatBkashApiError } from '../lib/bkash.js'
 import { getApiHealth } from '../lib/health.js'
 import { createStripePaymentIntent, getStripe } from '../lib/stripe.js'
 
@@ -32,8 +32,7 @@ app.post('/api/bkash/create-payment', async (req, res) => {
     res.json(result)
   } catch (error) {
     const statusCode = error.statusCode ?? 500
-    const message = error instanceof Error ? error.message : 'Unable to create bKash payment.'
-    res.status(statusCode).json({ error: message })
+    res.status(statusCode).json(formatBkashApiError(error))
   }
 })
 
@@ -43,8 +42,7 @@ app.post('/api/bkash/execute-payment', async (req, res) => {
     res.json(result)
   } catch (error) {
     const statusCode = error.statusCode ?? 500
-    const message = error instanceof Error ? error.message : 'Unable to execute bKash payment.'
-    res.status(statusCode).json({ error: message })
+    res.status(statusCode).json(formatBkashApiError(error))
   }
 })
 

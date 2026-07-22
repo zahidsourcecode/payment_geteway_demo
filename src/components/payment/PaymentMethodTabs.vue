@@ -8,7 +8,7 @@ const emit = defineEmits<{
   showTestInfo: [method: PaymentMethod]
 }>()
 
-const cardIconClass = 'h-14 w-[11rem] object-contain object-left'
+const cardIconClass = 'h-12 w-full max-w-[11rem] object-contain object-left sm:h-14'
 
 const methods: Array<{
   id: PaymentMethod
@@ -47,7 +47,7 @@ function openTestInfo(method: PaymentMethod, event: MouseEvent) {
       :key="method.id"
       role="button"
       tabindex="0"
-      class="relative cursor-pointer rounded-2xl border p-4 pr-14 text-left transition"
+      class="relative cursor-pointer rounded-2xl border p-3 pr-12 text-left transition sm:p-4 sm:pr-14"
       :class="
         model === method.id
           ? 'border-brand-500 bg-brand-50 ring-2 ring-brand-100 dark:border-brand-400 dark:bg-brand-950/40 dark:ring-brand-900'

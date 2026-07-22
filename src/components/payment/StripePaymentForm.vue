@@ -4,6 +4,8 @@ import type { Stripe, StripeElements, StripePaymentElement } from '@stripe/strip
 import { loadStripe } from '@stripe/stripe-js'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { createPaymentIntent } from '@/services/stripeApi'
+import { useErrorLogStore } from '@/stores/errorLogStore'
+import { getErrorDetails } from '@/utils/errors'
 
 const props = defineProps<{
   amount: number
@@ -20,6 +22,7 @@ const emit = defineEmits<{
 }>()
 
 const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+const errorLogStore = useErrorLogStore()
 const paymentElementRef = ref<HTMLDivElement | null>(null)
 
 const isReady = ref(false)
@@ -36,6 +39,7 @@ async function initializeStripe() {
   if (!publishableKey) {
     setupError.value =
       'Stripe publishable key is missing. Copy .env.example to .env and add your test keys.'
+    errorLogStore.addError({ source: 'stripe', message: setupError.value })
     isLoading.value = false
     return
   }
@@ -81,6 +85,11 @@ async function initializeStripe() {
       error instanceof Error
         ? error.message
         : 'Failed to initialize Stripe. Is the API server running?'
+    errorLogStore.addError({
+      source: 'stripe',
+      message: setupError.value,
+      details: getErrorDetails(error),
+    })
   } finally {
     isLoading.value = false
   }

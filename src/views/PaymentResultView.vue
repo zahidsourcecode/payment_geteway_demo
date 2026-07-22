@@ -31,7 +31,7 @@ function retryPayment() {
 </script>
 
 <template>
-  <section class="mx-auto max-w-3xl px-4 py-8 sm:py-16">
+  <section class="page-section max-w-3xl">
     <div
       v-if="isSuccess && order"
       class="ui-card rounded-2xl border-emerald-200 p-5 text-center sm:rounded-3xl sm:p-8 dark:border-emerald-800"

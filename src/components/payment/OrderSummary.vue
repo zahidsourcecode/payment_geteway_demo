@@ -23,10 +23,10 @@ const methodLabel = computed(() => {
 </script>
 
 <template>
-  <div class="ui-card p-6">
-    <div class="mb-4 flex items-center justify-between">
-      <h2 class="text-lg font-semibold ui-text-heading">Order summary</h2>
-      <span class="rounded-full ui-surface-muted px-3 py-1 text-xs font-medium ui-text-muted">
+  <div class="ui-card p-4 sm:p-6">
+    <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+      <h2 class="text-base font-semibold ui-text-heading sm:text-lg">Order summary</h2>
+      <span class="max-w-[10rem] truncate rounded-full ui-surface-muted px-3 py-1 text-xs font-medium ui-text-muted sm:max-w-none">
         {{ checkoutStore.orderId }}
       </span>
     </div>

@@ -32,6 +32,12 @@ export interface BkashPendingSession {
 
 export const BKASH_PENDING_SESSION_KEY = 'bkash-pending-session'
 
+function createApiError(message: string, details?: unknown) {
+  const error = new Error(message) as Error & { details?: unknown }
+  if (details !== undefined) error.details = details
+  return error
+}
+
 export async function createBkashPayment(
   payload: CreateBkashPaymentPayload,
 ): Promise<CreateBkashPaymentResponse> {
@@ -41,10 +47,13 @@ export async function createBkashPayment(
     body: JSON.stringify(payload),
   })
 
-  const data = (await response.json()) as CreateBkashPaymentResponse & { error?: string }
+  const data = (await response.json()) as CreateBkashPaymentResponse & {
+    error?: string
+    details?: unknown
+  }
 
   if (!response.ok) {
-    throw new Error(data.error ?? 'Failed to create bKash payment.')
+    throw createApiError(data.error ?? 'Failed to create bKash payment.', data.details)
   }
 
   return data
@@ -57,10 +66,13 @@ export async function executeBkashPayment(paymentID: string): Promise<ExecuteBka
     body: JSON.stringify({ paymentID }),
   })
 
-  const data = (await response.json()) as ExecuteBkashPaymentResponse & { error?: string }
+  const data = (await response.json()) as ExecuteBkashPaymentResponse & {
+    error?: string
+    details?: unknown
+  }
 
   if (!response.ok) {
-    throw new Error(data.error ?? 'Failed to execute bKash payment.')
+    throw createApiError(data.error ?? 'Failed to execute bKash payment.', data.details)
   }
 
   return data

@@ -1,4 +1,4 @@
-import { executeBkashPayment } from '../../lib/bkash.js'
+import { executeBkashPayment, formatBkashApiError } from '../../lib/bkash.js'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -12,7 +12,6 @@ export default async function handler(req, res) {
     res.status(200).json(result)
   } catch (error) {
     const statusCode = error.statusCode ?? 500
-    const message = error instanceof Error ? error.message : 'Unable to execute bKash payment.'
-    res.status(statusCode).json({ error: message })
+    res.status(statusCode).json(formatBkashApiError(error))
   }
 }

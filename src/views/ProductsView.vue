@@ -29,7 +29,7 @@ function addToCart(productId: string) {
       <h1 class="page-title mt-1 md:text-4xl">
         Shop Smarter, Live Better
       </h1>
-      <p class="mt-2 text-sm ui-text-body sm:text-base sm:whitespace-nowrap">
+      <p class="mt-2 text-sm ui-text-body sm:text-base">
         Find what you love, add it to your cart, and check out with confidence using our fast and secure shopping experience.
       </p>
     </div>

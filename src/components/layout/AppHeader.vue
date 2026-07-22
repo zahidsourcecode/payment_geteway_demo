@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useCartStore } from '@/stores/cartStore'
+import ErrorLogModal from '@/components/layout/ErrorLogModal.vue'
 import ThemeToggle from '@/components/layout/ThemeToggle.vue'
 import { developer } from '@/data/developer'
+import { useCartStore } from '@/stores/cartStore'
+import { useErrorLogStore } from '@/stores/errorLogStore'
 
 const cartStore = useCartStore()
+const errorLogStore = useErrorLogStore()
 const route = useRoute()
 const mobileMenuOpen = ref(false)
+const errorLogOpen = ref(false)
 
 const itemCount = computed(() => cartStore.itemCount)
+const errorCount = computed(() => errorLogStore.entries.length)
 
 const navLinks = [
   { label: 'Shop', to: { name: 'products' } },
@@ -19,7 +24,7 @@ const navLinks = [
 ]
 
 const navLinkClass =
-  'inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-400'
+  'inline-flex min-h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:text-brand-600 dark:text-slate-300 dark:hover:text-brand-400'
 
 const navActiveClass =
   'router-link-active !bg-brand-500 !text-white shadow-sm dark:!bg-brand-500 dark:!text-white'
@@ -33,6 +38,11 @@ watch(
 
 function toggleMobileMenu() {
   mobileMenuOpen.value = !mobileMenuOpen.value
+}
+
+function openErrorLog() {
+  errorLogOpen.value = true
+  mobileMenuOpen.value = false
 }
 </script>
 
@@ -53,7 +63,7 @@ function toggleMobileMenu() {
 
       <!-- Desktop menu -->
       <nav
-        class="hidden items-center rounded-xl border border-slate-200 bg-slate-100/80 p-1 md:inline-flex dark:border-slate-700 dark:bg-slate-800/80"
+        class="hidden max-w-[min(100vw-12rem,42rem)] items-center overflow-x-auto rounded-xl border border-slate-200 bg-slate-100/80 p-1 lg:inline-flex lg:max-w-none dark:border-slate-700 dark:bg-slate-800/80"
         aria-label="Main menu"
       >
         <RouterLink
@@ -71,12 +81,21 @@ function toggleMobileMenu() {
             {{ itemCount }}
           </span>
         </RouterLink>
+        <button type="button" :class="navLinkClass" @click="errorLogOpen = true">
+          Error log
+          <span
+            v-if="errorCount > 0"
+            class="inline-flex min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 py-0.5 text-xs font-semibold text-white"
+          >
+            {{ errorCount }}
+          </span>
+        </button>
       </nav>
 
       <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
         <RouterLink
           to="/cart"
-          class="relative inline-flex min-h-10 min-w-10 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-brand-300 hover:text-brand-600 sm:min-w-0 sm:px-3.5 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-brand-600 dark:hover:text-brand-400"
+          class="relative inline-flex min-h-10 min-w-10 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-brand-300 hover:text-brand-600 sm:min-w-0 sm:px-3.5 lg:hidden dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-brand-600 dark:hover:text-brand-400"
           :class="{ 'cart-pulse': itemCount > 0 }"
           aria-label="Cart"
         >
@@ -139,7 +158,7 @@ function toggleMobileMenu() {
 
         <button
           type="button"
-          class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-brand-300 hover:text-brand-600 md:hidden dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-brand-600 dark:hover:text-brand-400"
+          class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-brand-300 hover:text-brand-600 lg:hidden dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-brand-600 dark:hover:text-brand-400"
           :aria-expanded="mobileMenuOpen"
           aria-controls="mobile-menu"
           aria-label="Toggle menu"
@@ -159,7 +178,7 @@ function toggleMobileMenu() {
     <div
       v-show="mobileMenuOpen"
       id="mobile-menu"
-      class="border-t ui-border-subtle px-4 py-2 md:hidden"
+      class="border-t ui-border-subtle px-4 py-2 lg:hidden"
     >
       <nav
         class="flex flex-col gap-1 rounded-xl border border-slate-200 bg-slate-100/80 p-1 dark:border-slate-700 dark:bg-slate-800/80"
@@ -181,7 +200,18 @@ function toggleMobileMenu() {
             {{ itemCount }}
           </span>
         </RouterLink>
+        <button type="button" :class="navLinkClass" @click="openErrorLog">
+          Error log
+          <span
+            v-if="errorCount > 0"
+            class="inline-flex min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 py-0.5 text-xs font-semibold text-white"
+          >
+            {{ errorCount }}
+          </span>
+        </button>
       </nav>
     </div>
+
+    <ErrorLogModal v-model:open="errorLogOpen" />
   </header>
 </template>

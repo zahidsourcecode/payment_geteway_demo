@@ -86,14 +86,14 @@ function handleShowTestInfo(method: PaymentMethod) {
           Pay with Stripe test mode or bKash sandbox checkout.
         </p>
       </div>
-      <div class="ui-card w-full rounded-xl px-4 py-3 text-sm ui-text-body md:w-auto">
-        Customer:
+      <div class="ui-card w-full min-w-0 rounded-xl px-4 py-3 text-sm ui-text-body md:w-auto">
+        <span class="ui-text-muted">Customer:</span>
         <span class="font-medium ui-text-heading">{{ checkoutStore.checkoutDetails.fullName }}</span>
       </div>
     </div>
 
-    <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-8">
-      <div class="order-2 space-y-4 sm:space-y-6 lg:order-1">
+    <div class="grid gap-6 md:grid-cols-[1.15fr_0.85fr] md:gap-8">
+      <div class="order-2 space-y-4 sm:space-y-6 md:order-1">
         <div class="ui-card p-4 sm:p-6">
           <h2 class="mb-4 text-lg font-semibold ui-text-heading">Choose payment method</h2>
           <PaymentMethodTabs v-model="selectedMethod" @show-test-info="handleShowTestInfo" />
@@ -140,10 +140,10 @@ function handleShowTestInfo(method: PaymentMethod) {
 
       </div>
 
-      <div class="order-1 space-y-4 lg:order-2">
+      <div class="order-1 space-y-4 md:order-2">
         <OrderSummary show-method :method="selectedMethod" />
         <PaymentHistory />
-        <div class="ui-card p-4 text-sm ui-text-body sm:p-5">
+        <div class="hidden ui-card p-4 text-sm ui-text-body sm:block sm:p-5">
           <p class="font-medium ui-text-heading">What this demo shows</p>
           <ul class="mt-3 list-disc space-y-2 pl-5">
             <li>Stripe Payment Element in test mode</li>

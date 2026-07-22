@@ -52,10 +52,10 @@ function submitCheckout() {
       </p>
     </div>
 
-    <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8">
-      <OrderSummary class="order-1 lg:order-2" />
+    <div class="grid gap-6 md:grid-cols-[1.1fr_0.9fr] md:gap-8">
+      <OrderSummary class="order-2 lg:order-2" />
 
-      <form class="ui-card order-2 space-y-4 p-4 sm:p-6 lg:order-1" @submit.prevent="submitCheckout">
+      <form class="ui-card order-1 space-y-4 p-4 sm:p-6 lg:order-1" @submit.prevent="submitCheckout">
         <BaseInput
           id="email"
           v-model="form.email"

@@ -8,11 +8,14 @@ import {
 } from '@/services/bkashApi'
 import { useCartStore } from '@/stores/cartStore'
 import { useCheckoutStore } from '@/stores/checkoutStore'
+import { useErrorLogStore } from '@/stores/errorLogStore'
+import { getErrorDetails } from '@/utils/errors'
 
 const route = useRoute()
 const router = useRouter()
 const checkoutStore = useCheckoutStore()
 const cartStore = useCartStore()
+const errorLogStore = useErrorLogStore()
 
 const message = ref('Finalizing your bKash payment…')
 
@@ -20,7 +23,13 @@ function maskBkashMobile(mobile: string) {
   return `bKash · ${mobile.slice(0, 3)}***${mobile.slice(-3)}`
 }
 
-function redirectFailed(errorMessage: string) {
+function redirectFailed(errorMessage: string, details?: unknown) {
+  errorLogStore.addError({
+    source: 'bkash',
+    message: errorMessage,
+    details,
+    route: route.fullPath,
+  })
   clearBkashPendingSession()
   sessionStorage.removeItem('checkout-ready')
   checkoutStore.setFailureMessage(errorMessage)
@@ -87,14 +96,17 @@ onMounted(async () => {
     const mobile = result.customerMsisdn ?? pending.bkashMobile
     redirectSuccess(result.transactionId, mobile, pending)
   } catch (error) {
-    redirectFailed(error instanceof Error ? error.message : 'Unable to finalize bKash payment.')
+    redirectFailed(
+      error instanceof Error ? error.message : 'Unable to finalize bKash payment.',
+      getErrorDetails(error),
+    )
   }
 })
 </script>
 
 <template>
-  <section class="mx-auto flex min-h-[50vh] max-w-lg flex-col items-center justify-center px-4 py-16 text-center">
-    <div class="ui-card w-full p-8">
+  <section class="page-section flex min-h-[50vh] max-w-lg flex-col items-center justify-center">
+    <div class="ui-card w-full p-6 text-center sm:p-8">
       <div class="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-brand-500 border-t-transparent" />
       <h1 class="page-title mt-6">Processing bKash payment</h1>
       <p class="mt-2 text-sm ui-text-body">{{ message }}</p>
