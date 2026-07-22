@@ -1,5 +1,8 @@
 import { computed, ref } from 'vue'
-import { processPayment } from '@/services/paymentApi'
+import {
+  createBkashPayment,
+  saveBkashPendingSession,
+} from '@/services/bkashApi'
 import { useCartStore } from '@/stores/cartStore'
 import { useCheckoutStore } from '@/stores/checkoutStore'
 import type { PaymentFlowStatus, PaymentMethod } from '@/types'
@@ -18,9 +21,7 @@ export function usePaymentGateway() {
   const fieldErrors = ref<Record<string, string>>({})
   const pendingBkashMobile = ref<string | null>(null)
 
-  const isBusy = computed(() =>
-    ['validating', 'processing', 'requires_3ds'].includes(status.value),
-  )
+  const isBusy = computed(() => ['validating', 'processing'].includes(status.value))
 
   function resetErrors() {
     errorMessage.value = null
@@ -43,40 +44,41 @@ export function usePaymentGateway() {
       return
     }
 
-    pendingBkashMobile.value = parsed.data.bkashMobile
-    await executeBkashPayment()
-  }
+    if (cartStore.total <= 0) {
+      status.value = 'failed'
+      errorMessage.value = 'Your cart is empty. Add products before paying with bKash.'
+      checkoutStore.setFailureMessage(errorMessage.value)
+      return
+    }
 
-  async function executeBkashPayment() {
+    pendingBkashMobile.value = parsed.data.bkashMobile
     status.value = 'processing'
     errorMessage.value = null
 
     try {
-      const response = await processPayment({
+      const callbackURL = `${window.location.origin}/payment/bkash/callback`
+      const result = await createBkashPayment({
         amount: cartStore.total,
-        currency: cartStore.currency,
-        method: 'bkash',
-        orderId: checkoutStore.orderId,
-        bkashMobile: pendingBkashMobile.value ?? undefined,
+        payerReference: parsed.data.bkashMobile,
+        callbackURL,
+        merchantInvoiceNumber: checkoutStore.orderId,
       })
 
-      if (response.status === 'timeout') {
-        status.value = 'timeout'
-        errorMessage.value = 'The payment gateway timed out. Please retry when ready.'
-        return
-      }
+      saveBkashPendingSession({
+        orderId: checkoutStore.orderId,
+        amount: cartStore.total,
+        currency: cartStore.currency,
+        email: checkoutStore.checkoutDetails.email,
+        bkashMobile: parsed.data.bkashMobile,
+        paymentID: result.paymentID,
+        bdtAmount: result.bdtAmount,
+      })
 
-      if (response.status === 'declined') {
-        status.value = 'failed'
-        errorMessage.value = response.declineMessage ?? 'Payment was declined.'
-        checkoutStore.setFailureMessage(errorMessage.value)
-        return
-      }
-
-      completeSuccess('bkash', response.transactionId!)
-    } catch {
+      window.location.assign(result.bkashURL)
+    } catch (error) {
       status.value = 'failed'
-      errorMessage.value = 'Unexpected error while processing payment.'
+      errorMessage.value =
+        error instanceof Error ? error.message : 'Unexpected error while starting bKash payment.'
       checkoutStore.setFailureMessage(errorMessage.value)
     }
   }
@@ -115,11 +117,6 @@ export function usePaymentGateway() {
     cartStore.clearCart()
   }
 
-  function retry() {
-    resetErrors()
-    status.value = 'idle'
-  }
-
   return {
     status,
     errorMessage,
@@ -129,6 +126,5 @@ export function usePaymentGateway() {
     submitBkashPayment,
     completeStripeSuccess,
     completeStripeFailure,
-    retry,
   }
 }

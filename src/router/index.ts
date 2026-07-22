@@ -29,6 +29,11 @@ const router = createRouter({
       meta: { requiresCheckout: true },
     },
     {
+      path: '/payment/bkash/callback',
+      name: 'bkash-callback',
+      component: () => import('@/views/BkashCallbackView.vue'),
+    },
+    {
       path: '/payment/result',
       name: 'payment-result',
       component: () => import('@/views/PaymentResultView.vue'),

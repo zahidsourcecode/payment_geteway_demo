@@ -8,13 +8,16 @@ import PaymentMethodTabs from '@/components/payment/PaymentMethodTabs.vue'
 import PaymentStatusBanner from '@/components/payment/PaymentStatusBanner.vue'
 import StripePaymentForm from '@/components/payment/StripePaymentForm.vue'
 import StripeTestCardsModal from '@/components/payment/StripeTestCardsModal.vue'
+import BkashTestInfoModal from '@/components/payment/BkashTestInfoModal.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { usePaymentGateway } from '@/composables/usePaymentGateway'
 import { useCartStore } from '@/stores/cartStore'
 import { useCheckoutStore } from '@/stores/checkoutStore'
 import type { BkashFormValues } from '@/utils/validation'
+import type { PaymentMethod } from '@/types'
 
-const showTestCardsModal = ref(false)
+const showStripeTestCardsModal = ref(false)
+const showBkashTestInfoModal = ref(false)
 
 const checkoutStore = useCheckoutStore()
 const cartStore = useCartStore()
@@ -60,6 +63,15 @@ function handleStripeSuccess(payload: { transactionId: string; maskedPayment: st
 function handleStripeFailed(message: string) {
   payment.completeStripeFailure(message)
 }
+
+function handleShowTestInfo(method: PaymentMethod) {
+  if (method === 'stripe') {
+    showStripeTestCardsModal.value = true
+    return
+  }
+
+  showBkashTestInfoModal.value = true
+}
 </script>
 
 <template>
@@ -71,7 +83,7 @@ function handleStripeFailed(message: string) {
         </p>
         <h1 class="page-title mt-2">Secure checkout</h1>
         <p class="mt-2 max-w-2xl text-sm ui-text-body sm:text-base">
-          Pay with Stripe test mode or try the simulated bKash wallet flow.
+          Pay with Stripe test mode or bKash sandbox checkout.
         </p>
       </div>
       <div class="ui-card w-full rounded-xl px-4 py-3 text-sm ui-text-body md:w-auto">
@@ -83,22 +95,12 @@ function handleStripeFailed(message: string) {
     <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-8">
       <div class="order-2 space-y-4 sm:space-y-6 lg:order-1">
         <div class="ui-card p-4 sm:p-6">
-          <div class="mb-4 flex items-center gap-2">
-            <h2 class="text-lg font-semibold ui-text-heading">Choose payment method</h2>
-            <button
-              type="button"
-              class="hint-bulb-glow inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-brand-100 text-base transition hover:bg-brand-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 dark:bg-brand-950 dark:hover:bg-brand-900"
-              aria-label="Show Stripe test cards"
-              title="Stripe test cards"
-              @click="showTestCardsModal = true"
-            >
-              💡
-            </button>
-          </div>
-          <PaymentMethodTabs v-model="selectedMethod" />
+          <h2 class="mb-4 text-lg font-semibold ui-text-heading">Choose payment method</h2>
+          <PaymentMethodTabs v-model="selectedMethod" @show-test-info="handleShowTestInfo" />
         </div>
 
-        <StripeTestCardsModal v-model:open="showTestCardsModal" />
+        <StripeTestCardsModal v-model:open="showStripeTestCardsModal" />
+        <BkashTestInfoModal v-model:open="showBkashTestInfoModal" />
 
         <div class="ui-card p-4 sm:p-6">
           <PaymentStatusBanner :status="payment.status.value" :message="payment.errorMessage.value" />
@@ -134,16 +136,6 @@ function handleStripeFailed(message: string) {
               </template>
             </BkashForm>
           </div>
-
-          <div
-            v-if="payment.status.value === 'timeout'"
-            class="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
-          >
-            <BaseButton class="w-full sm:w-auto" @click="payment.retry()">Retry payment</BaseButton>
-            <BaseButton variant="secondary" class="w-full sm:w-auto" @click="router.push({ name: 'checkout' })">
-              Edit checkout
-            </BaseButton>
-          </div>
         </div>
 
       </div>
@@ -157,7 +149,7 @@ function handleStripeFailed(message: string) {
             <li>Stripe Payment Element in test mode</li>
             <li>Server-side PaymentIntent creation</li>
             <li>Real 3D Secure handling via Stripe.js</li>
-            <li>Simulated bKash wallet for local payment UX</li>
+            <li>bKash Tokenized Checkout sandbox (redirect flow)</li>
           </ul>
         </div>
       </div>

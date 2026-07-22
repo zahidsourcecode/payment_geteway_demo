@@ -28,17 +28,6 @@ export async function createPaymentIntent(
   return data
 }
 
-export async function checkStripeHealth(): Promise<boolean> {
-  try {
-    const response = await fetch('/api/health')
-    if (!response.ok) return false
-    const data = (await response.json()) as { stripeConfigured?: boolean }
-    return Boolean(data.stripeConfigured)
-  } catch {
-    return false
-  }
-}
-
 export const stripeTestCards = [
   {
     number: '4242 4242 4242 4242',

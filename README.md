@@ -2,13 +2,13 @@
 
 A portfolio showcase project built with Vue.js to demonstrate payment gateway integration, checkout flows, and secure payment UX patterns.
 
-> **Demo only** — Stripe runs in **test mode**. bKash is simulated. No real charges are made.
+> **Demo only** — Stripe runs in **test mode**. bKash uses the **official sandbox**. No real charges are made.
 
 ---
 
 ## Project Purpose
 
-This project is designed for **portfolio and interview demonstrations**. It integrates **Stripe test mode** for card payments and includes a **simulated bKash wallet** flow for local payment UX.
+This project is designed for **portfolio and interview demonstrations**. It integrates **Stripe test mode** for card payments and **bKash Tokenized Checkout sandbox** for mobile wallet payments.
 
 **Goals:**
 
@@ -22,7 +22,7 @@ This project is designed for **portfolio and interview demonstrations**. It inte
 1. **Shop** — browse products and add items to cart  
 2. **Cart** — review quantities and order total  
 3. **Checkout** — enter basic billing details  
-4. **Payment** — pay with **Stripe** (test mode) or **bKash** (simulated)  
+4. **Payment** — pay with **Stripe** (test mode) or **bKash** (sandbox redirect)  
 5. **Result** — view a success receipt or retry after a failure  
 
 ---
@@ -36,7 +36,7 @@ This project is designed for **portfolio and interview demonstrations**. It inte
 | [Vite](https://vitejs.dev/) | Build tool and dev server |
 | [Stripe.js](https://stripe.com/docs/stripe-js) | Payment Element & test-mode checkout |
 | [Express](https://expressjs.com/) | Local dev API server |
-| [Vercel Serverless](https://vercel.com/docs/functions) | Production API for PaymentIntents |
+| [Vercel Serverless](https://vercel.com/docs/functions) | Production API (Stripe + bKash) |
 | [Vue Router 4](https://router.vuejs.org/) | Client-side routing |
 | [Pinia](https://pinia.vuejs.org/) | State management (cart & checkout) |
 | [Tailwind CSS v4](https://tailwindcss.com/) | Utility-first styling |
@@ -60,9 +60,9 @@ cd payment_geteway_demo
 npm install
 ```
 
-### 2. Configure Stripe test keys
+### 2. Configure environment variables
 
-Copy the example env file and add your **test mode** keys from the [Stripe Dashboard](https://dashboard.stripe.com/test/apikeys):
+Copy the example env file and add your keys:
 
 ```bash
 cp .env.example .env
@@ -71,11 +71,20 @@ cp .env.example .env
 Edit `.env`:
 
 ```env
+# Stripe (test mode)
 STRIPE_SECRET_KEY=sk_test_...
 VITE_STRIPE_PUBLISHABLE_KEY=pk_test_...
+
+# bKash sandbox
+BKASH_BASE_URL=https://tokenized.sandbox.bka.sh/v1.2.0-beta
+BKASH_USERNAME=your_sandbox_username
+BKASH_PASSWORD=your_sandbox_password
+BKASH_APP_KEY=your_app_key
+BKASH_APP_SECRET=your_app_secret
+BKASH_USD_TO_BDT_RATE=110
 ```
 
-> Never commit `.env` or use live keys in this demo project.
+> Never commit `.env`. Use test/sandbox keys only — never expose `STRIPE_SECRET_KEY` or `BKASH_APP_SECRET` to the frontend.
 
 ### 3. Start the app (frontend + API)
 
@@ -86,7 +95,7 @@ npm run dev
 This runs:
 
 - **Vue app** at http://localhost:5173  
-- **Stripe API** at http://localhost:4242  
+- **Payment API** at http://localhost:4242  
 
 ### 4. Build for production
 
@@ -99,7 +108,7 @@ npm run preview
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start Vue app + Stripe API together |
+| `npm run dev` | Start Vue app + payment API together |
 | `npm run dev:client` | Start Vue app only |
 | `npm run dev:server` | Start Stripe API only |
 | `npm run build` | Type-check and build for production |
@@ -119,13 +128,19 @@ Use these in the Stripe Payment Element (any future expiry, any CVC):
 
 More test cards: [Stripe testing docs](https://docs.stripe.com/testing)
 
-**bKash demo:** use any valid `01XXXXXXXXX` number; include `0000` in the number to simulate a decline.
+**bKash sandbox:** select **bKash** on the payment page and click the glowing **light bulb** for test wallets, PIN, and OTP. You will be redirected to the bKash sandbox checkout page.
+
+| Test wallets | PIN | OTP |
+|--------------|-----|-----|
+| `01770618575`, `01929918378`, `01770618576`, `01877722345`, `01619777282`, `01619777283` | `12121` | `123456` |
+
+Cart totals are in USD; the API converts to BDT for bKash using `BKASH_USD_TO_BDT_RATE`.
 
 ---
 
 ## Deploy to Vercel
 
-The project is configured for **full-stack Vercel deployment** — Vue frontend + Stripe serverless API on the same domain.
+The project is configured for **full-stack Vercel deployment** — Vue frontend + Stripe/bKash serverless APIs on the same domain.
 
 ### 1. Push to GitHub
 
@@ -145,6 +160,12 @@ In **Project Settings → Environment Variables**, add:
 |------|--------|
 | `VITE_STRIPE_PUBLISHABLE_KEY` | `pk_test_...` from Stripe Dashboard |
 | `STRIPE_SECRET_KEY` | `sk_test_...` from Stripe Dashboard |
+| `BKASH_BASE_URL` | `https://tokenized.sandbox.bka.sh/v1.2.0-beta` |
+| `BKASH_USERNAME` | Sandbox merchant username |
+| `BKASH_PASSWORD` | Sandbox merchant password |
+| `BKASH_APP_KEY` | Sandbox app key |
+| `BKASH_APP_SECRET` | Sandbox app secret |
+| `BKASH_USD_TO_BDT_RATE` | `110` (optional demo conversion rate) |
 
 Apply to **Production**, **Preview**, and **Development**.
 
@@ -155,7 +176,7 @@ Apply to **Production**, **Preview**, and **Development**.
 Click **Deploy**. Vercel will:
 
 - Build the Vue app to `dist/`  
-- Deploy `/api/health` and `/api/create-payment-intent` as serverless functions  
+- Deploy `/api/*` serverless functions (Stripe + bKash)  
 - Route all other paths to `index.html` for Vue Router  
 
 ### Local vs production
@@ -165,7 +186,7 @@ Click **Deploy**. Vercel will:
 | **Local** (`npm run dev`) | Express on port 4242 (proxied via Vite) |
 | **Vercel** | Serverless functions in `/api` |
 
-Both use the same shared logic in `lib/stripe.js`.
+Both use shared logic in `lib/stripe.js` and `lib/bkash.js`.
 
 ---
 
@@ -173,14 +194,14 @@ Both use the same shared logic in `lib/stripe.js`.
 
 ```
 api/                # Vercel serverless functions (production)
-lib/                # Shared Stripe logic
+lib/                # Shared Stripe + bKash logic
 server/             # Express API (local development)
 src/
 ├── components/     # UI, cart, and payment components
 ├── composables/    # Payment flow logic
-├── services/       # Stripe API client + mock bKash API
+├── services/       # Stripe + bKash API clients
 ├── stores/         # Pinia stores (cart & checkout)
-└── views/          # Route pages
+└── views/          # Route pages (incl. bKash callback)
 vercel.json         # Vercel build + SPA routing config
 ```
 

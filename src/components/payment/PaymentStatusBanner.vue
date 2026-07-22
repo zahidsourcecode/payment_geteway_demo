@@ -8,13 +8,11 @@ defineProps<{
 
 const statusCopy: Record<
   Exclude<PaymentFlowStatus, 'idle' | 'success'>,
-  { title: string; tone: 'info' | 'error' | 'warning' }
+  { title: string; tone: 'info' | 'error' }
 > = {
   validating: { title: 'Validating payment details…', tone: 'info' },
   processing: { title: 'Securing your payment…', tone: 'info' },
-  requires_3ds: { title: 'Additional authentication required', tone: 'warning' },
   failed: { title: 'Payment failed', tone: 'error' },
-  timeout: { title: 'Gateway timeout', tone: 'warning' },
 }
 </script>
 
@@ -27,8 +25,6 @@ const statusCopy: Record<
         statusCopy[status]?.tone === 'info',
       'border-red-200 bg-red-50 text-red-900 dark:border-red-800 dark:bg-red-950/50 dark:text-red-200':
         statusCopy[status]?.tone === 'error',
-      'border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-200':
-        statusCopy[status]?.tone === 'warning',
     }"
   >
     <p class="font-medium">{{ statusCopy[status]?.title }}</p>
